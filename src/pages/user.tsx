@@ -3,6 +3,7 @@ import  { useParams }  from "react-router-dom";
 import { Card } from '../components/card';
 import ICard from '../interfaces/card.type';
 import IUser from '../interfaces/user.type';
+import './user.css'
 
 //Types
 type Props = {
@@ -71,15 +72,15 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                     cardsToRender.push(<Card key={i} card={card}/>);
                 }
 
-                return <>
-                    <div>
-                        <img src="https://cdn-icons-png.flaticon.com/512/21/21104.png" alt="profile picture"/>
-                        <p>{ this.state.user.nickName }</p>
-                    </div>
-                    {
-                        cardsToRender.map(card => card)
-                    }
-            </>
+                return <div className='user'>
+                            <div className='profile'>
+                                <img className='logo' src="https://cdn-icons-png.flaticon.com/512/21/21104.png" alt="profile picture"/>
+                                <p>{ this.state.user.nickName }</p>
+                            </div>
+                            {
+                                cardsToRender.map(card => card)
+                            }
+                        </div>
         }
     }
 }

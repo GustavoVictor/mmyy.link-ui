@@ -1,0 +1,24 @@
+.user {
+    /* height: 50%; */
+    
+    vertical-align: top middle;
+    position: absolute;
+    /* top: 50%; */
+    left:25%;
+    top:5%;
+    /* transform: translateX(50%);  */
+    max-width: 50%;
+    width: 100%;
+}
+.profile .logo {
+    max-width: 20%;
+    max-height: 15%;
+}
+
+.user .profile {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: top center;
+    align-items: center;
+}
