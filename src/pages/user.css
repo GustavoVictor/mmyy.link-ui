@@ -1,24 +1,51 @@
 .user {
-    /* height: 50%; */
-    
-    vertical-align: top middle;
     position: absolute;
-    /* top: 50%; */
-    left:25%;
-    top:5%;
-    /* transform: translateX(50%);  */
-    max-width: 50%;
+    left:20%;
+    top:50px;
+    max-width: 60%;
     width: 100%;
-}
-.profile .logo {
-    max-width: 20%;
-    max-height: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.user .profile {
+.logo {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 100%;
+}
+
+.profile {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: top center;
     align-items: center;
+}
+
+.social {
+    background-color: transparent;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    display: flex;
+}
+
+.social-card { 
+    height: 50px;
+    width: 50px;
+    margin: 10px;
+    border-radius: 100%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
+}
+
+.user-name {
+    font-weight: bold;
+    text-transform: capitalize;
+    color: white;
+}
+
+.user-sumary {
+    display: inline;
+    font-weight: 200;
+    color: white;
 }

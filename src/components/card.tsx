@@ -12,8 +12,12 @@ export class Card extends React.Component<props> {
             <div className="container">
                 <div>
                     <p>{this.props.card.icon}</p>
-                    </div>
-                <div><h4><b>{this.props.card.description}</b></h4></div>
+                </div>
+                <div>
+                    <h4>
+                        <p><b>{this.props.card.description}</b></p>
+                    </h4>
+                </div>
             </div>
         </div>
     }

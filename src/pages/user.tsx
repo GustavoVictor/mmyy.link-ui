@@ -4,6 +4,8 @@ import { Card } from '../components/card';
 import ICard from '../interfaces/card.type';
 import IUser from '../interfaces/user.type';
 import './user.css'
+import { SocialIcon } from 'react-social-icons';
+import Gustavo from '../assets/gustavo.jpeg';
 
 //Types
 type Props = {
@@ -34,21 +36,58 @@ class UserPageWithHookResult extends React.Component<Props, State>{
             name: 'Gustavo',
             nickName: 'v_guto',
             lastName: 'Assunção',
+            sumary: `back-end developer 💻 (mainly C# 💜💜) | React enthusiast 😃 | sometimes I'm a bartender as a hobby 🍸🍹`,
             email: 'gustavovictor94@gmail.com',
+            backgroundColor:'#ffc213',
             cards: [{
                 id: '1',
                 index: 1,
-                group: 'primeiro',
+                group: 'social',
                 icon: 'instagram',
-                description: 'v_guto',
+                description: 'Instagram',
                 URL: 'https://www.instagram.com/v_guto/'
             },{
-                id: '1',
-                index: 1,
-                group: 'primeiro',
+                id: '2',
+                index: 2,
+                group: 'social',
                 icon: 'facebook',
-                description: 'Gustavo Assunção',
+                description: 'Facebook',
                 URL: 'https://www.facebook.com/gustavo.victor.1804/'
+            },{
+                id: '3',
+                index: 3,
+                group: 'social',
+                icon:'whatsapp',
+                description:'WhatsApp',
+                URL:'https://wa.me/5512982034955?text=Ol%C3%A1%2C+Gustavo%21'
+            },{
+                id: '4',
+                index: 4,
+                group: 'social',
+                icon: 'instagram',
+                description: 'Instagram',
+                URL: 'https://www.instagram.com/v_guto/'
+            },{
+                id: '5',
+                index: 5,
+                group: 'social',
+                icon: 'facebook',
+                description: 'Facebook',
+                URL: 'https://www.facebook.com/gustavo.victor.1804/'
+            },{
+                id: '6',
+                index: 6,
+                group: 'social',
+                icon:'whatsapp',
+                description:'WhatsApp',
+                URL:'https://wa.me/5512982034955?text=Ol%C3%A1%2C+Gustavo%21'
+            },{
+                id: '7',
+                index: 7,
+                group: 'social',
+                icon:'whatsapp',
+                description:'WhatsApp',
+                URL:'https://wa.me/5512982034955?text=Ol%C3%A1%2C+Gustavo%21'
             }]
         }
 
@@ -69,13 +108,30 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 for (let i = 0; i < cardsLength; i++){
                     const card:ICard = this.state.user.cards[i];
                     
-                    cardsToRender.push(<Card key={i} card={card}/>);
+                    cardsToRender.push(<Card key={card.id} card={card}/>);
                 }
+                
+                let social = this.state.user.cards.filter(card => card.group == 'social').sort((a, b) => a.index - b.index);
+                
+                document.body.style.backgroundColor = this.state.user.backgroundColor;
 
                 return <div className='user'>
                             <div className='profile'>
-                                <img className='logo' src="https://cdn-icons-png.flaticon.com/512/21/21104.png" alt="profile picture"/>
-                                <p>{ this.state.user.nickName }</p>
+                                <img className='logo' src={Gustavo} alt="profile picture"/>
+
+                                <div className='user-name'>
+                                    <h2>{ this.state.user.name } {this.state.user.lastName}</h2>
+                                </div>
+
+                                <div className='user-sumary'>{ this.state.user.sumary }</div>
+                                
+                                <div className='social'>
+                                    {
+                                        social.map(social => {
+                                            return <SocialIcon key={social.id} url={social.URL} className='social-card' label={social.description} fgColor='#242424' bgColor='#fff'/>;
+                                        })
+                                    }
+                                </div>
                             </div>
                             {
                                 cardsToRender.map(card => card)
