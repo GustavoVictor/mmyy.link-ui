@@ -1,12 +1,22 @@
+.container {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+    /* margin-top: 50px; */
+}
+
 .user {
-    position: absolute;
-    left:20%;
-    top:50px;
-    max-width: 60%;
-    width: 100%;
+    display: flex;
+    max-width: 100%;
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 50px;
 }
 
 .logo {
@@ -48,4 +58,20 @@
     display: inline;
     font-weight: 200;
     color: white;
+}
+
+.card-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-weight: 400;
+    padding: 20px 20px 20px 20px;
+    background-color: #0465b2;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.5);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.space-btw-card {
+    margin-bottom: 20px;
 }

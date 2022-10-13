@@ -6,6 +6,7 @@ import IUser from '../interfaces/user.type';
 import './user.css'
 import { SocialIcon } from 'react-social-icons';
 import Gustavo from '../assets/gustavo.jpeg';
+import IItem from '../interfaces/item.type';
 
 //Types
 type Props = {
@@ -36,13 +37,14 @@ class UserPageWithHookResult extends React.Component<Props, State>{
             name: 'Gustavo',
             nickName: 'v_guto',
             lastName: 'Assunção',
-            sumary: `back-end developer 💻 (mainly C# 💜💜) | React enthusiast 😃 | sometimes I'm a bartender as a hobby 🍸🍹`,
+            sumary: `Back-end developer 💻 (C# 💜💜) | React enthusiast 😃 | sometimes I'm a bartender as a hobby 🍸🍹`,
             email: 'gustavovictor94@gmail.com',
             backgroundColor:'#ffc213',
             cards: [{
                 id: '1',
                 index: 1,
                 group: 'social',
+                index_group: 0,
                 icon: 'instagram',
                 description: 'Instagram',
                 URL: 'https://www.instagram.com/v_guto/'
@@ -50,6 +52,7 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 id: '2',
                 index: 2,
                 group: 'social',
+                index_group: 0,
                 icon: 'facebook',
                 description: 'Facebook',
                 URL: 'https://www.facebook.com/gustavo.victor.1804/'
@@ -57,37 +60,74 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 id: '3',
                 index: 3,
                 group: 'social',
+                index_group: 0,
                 icon:'whatsapp',
+                description:'WhatsApp',
+                URL:'https://wa.me/5512982034955?text=Ol%C3%A1%2C+Gustavo%21'
+            },{
+                id: '2',
+                index: 2,
+                group: undefined,
+                index_group: undefined,
+                icon: 'linkedn',
+                description: 'Instagram',
+                URL: 'https://www.instagram.com/v_guto/'
+            },{
+                id: '4',
+                index: 4,
+                group: undefined,
+                index_group: undefined,
+                icon: 'tink-link',
+                description: 'Instagram',
+                URL: 'https://www.instagram.com/v_guto/'
+            },{
+                id: '1',
+                index: 1,
+                group: 'group 1',
+                index_group: 1,
+                icon: 'jogo 1',
+                description: 'Facebook',
+                URL: 'https://www.facebook.com/gustavo.victor.1804/'
+            },{
+                id: '2',
+                index: 2,
+                group: 'group 1',
+                index_group: 1,
+                icon:'jogo 2',
+                description:'WhatsApp',
+                URL:'https://wa.me/5512982034955?text=Ol%C3%A1%2C+Gustavo%21'
+            },{
+                id: '1',
+                index: 1,
+                group: 'group 3',
+                index_group: 3,
+                icon:'site 3',
+                description:'WhatsApp',
+                URL:'https://wa.me/5512982034955?text=Ol%C3%A1%2C+Gustavo%21'
+            },{
+                id: '2',
+                index: 2,
+                group: 'group 3',
+                index_group: 3,
+                icon:'site 3',
                 description:'WhatsApp',
                 URL:'https://wa.me/5512982034955?text=Ol%C3%A1%2C+Gustavo%21'
             },{
                 id: '4',
                 index: 4,
-                group: 'social',
-                icon: 'instagram',
+                group: undefined,
+                index_group: undefined,
+                icon: 'tink-link',
                 description: 'Instagram',
                 URL: 'https://www.instagram.com/v_guto/'
             },{
                 id: '5',
                 index: 5,
-                group: 'social',
-                icon: 'facebook',
-                description: 'Facebook',
-                URL: 'https://www.facebook.com/gustavo.victor.1804/'
-            },{
-                id: '6',
-                index: 6,
-                group: 'social',
-                icon:'whatsapp',
-                description:'WhatsApp',
-                URL:'https://wa.me/5512982034955?text=Ol%C3%A1%2C+Gustavo%21'
-            },{
-                id: '7',
-                index: 7,
-                group: 'social',
-                icon:'whatsapp',
-                description:'WhatsApp',
-                URL:'https://wa.me/5512982034955?text=Ol%C3%A1%2C+Gustavo%21'
+                group: undefined,
+                index_group: undefined,
+                icon: 'tink-link',
+                description: 'Instagram',
+                URL: 'https://www.instagram.com/v_guto/'
             }]
         }
 
@@ -101,41 +141,99 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 this.state.user == undefined)
                 return <div>Carregando...</div>
             else {
-                let cardsToRender = new Array<ReactNode>();
+                document.body.style.backgroundColor = this.state.user.backgroundColor;
+                
+                let _cards = this.state.user.cards.filter(card => card.group != 'social').sort((a, b) => a.index - b.index);
+                
+                let card_groups = _cards.reduce(function (r, a) {
+                    const group = a.index_group ?? a.index;
 
-                const cardsLength = this.state.user.cards.length ?? 0;
+                    if (a.index_group != null)
+                    {
+                        r[group] = r[group] || [];
+                        r[group].push(a);
+                    }
+                    else {
+                        r[a.index] = [];
+                        r[group].push(a);
+                    }
 
-                for (let i = 0; i < cardsLength; i++){
-                    const card:ICard = this.state.user.cards[i];
+                    return r;
+                }, new Array<ICard[]>());
+
+                console.log(card_groups);
+                
+                // const cardsLength = _cards.length ?? 0;
+                const cards_groups_length = card_groups.length;
+                let cards_to_render = new Array<ReactNode>();
+
+                function AddSpacebtwCard(i: number, lenght:number, list:Array<ReactNode>){
+                    if (i > 0 && i < lenght)
+                    list.push(<div className='space-btw-card'></div>)
+                }
+
+                for (let i = 0; i < cards_groups_length; i++){
+                    const group:ICard[] = card_groups[i];
+
+                    if (group == undefined)
+                        continue;
+
+                    if (group.length == 1){
+                        const card:ICard = group[0];
+                        cards_to_render.push(<Card key={card.id} card={card}/>);
+                        AddSpacebtwCard(i, cards_groups_length, cards_to_render);
+                        continue;
+                    }
+
+                    let cards_to_render_in_group = new Array<ReactNode>();
+
+                    for(let x = 0; x < group.length; x++){
+                        const card:ICard = group[x];
+
+                        AddSpacebtwCard(x, group.length, cards_to_render_in_group);
+                        cards_to_render_in_group.push(<Card key={card.id} card={card}/>);
+                    }
+
                     
-                    cardsToRender.push(<Card key={card.id} card={card}/>);
+                    cards_to_render.push(
+                        <div className='card-group'> 
+                            { cards_to_render_in_group.map(card => card) } 
+                        </div>)
+                    
+                    AddSpacebtwCard(i, cards_groups_length, cards_to_render);
                 }
                 
-                let social = this.state.user.cards.filter(card => card.group == 'social').sort((a, b) => a.index - b.index);
+                // for (let i = 0; i < cardsLength; i++){
+                //     const card:ICard = _cards[i];
+                    
+                //     cards_to_render.push(<Card key={card.id} card={card}/>);
+                // }
                 
-                document.body.style.backgroundColor = this.state.user.backgroundColor;
+                let social = this.state.user.cards.filter(card => card.group == 'social').sort((a, b) => a.index - b.index);
 
-                return <div className='user'>
-                            <div className='profile'>
-                                <img className='logo' src={Gustavo} alt="profile picture"/>
+                return <div className='container'>
+                            <div className='user'>
+                                <div className='profile'>
+                                    <img className='logo' src={Gustavo} alt="profile picture"/>
 
-                                <div className='user-name'>
-                                    <h2>{ this.state.user.name } {this.state.user.lastName}</h2>
+                                    <div className='user-name'>
+                                        <h2>{ this.state.user.name } {this.state.user.lastName}</h2>
+                                    </div>
+
+                                    <div className='user-sumary'>{ this.state.user.sumary }</div>
+                                    
+                                    <div className='social'>
+                                        {
+                                            social.map(social => {
+                                                return <SocialIcon key={social.id} url={social.URL} className='social-card' label={social.description} fgColor='#242424' bgColor='#fff'/>;
+                                            })
+                                        }
+                                    </div>
                                 </div>
-
-                                <div className='user-sumary'>{ this.state.user.sumary }</div>
-                                
-                                <div className='social'>
-                                    {
-                                        social.map(social => {
-                                            return <SocialIcon key={social.id} url={social.URL} className='social-card' label={social.description} fgColor='#242424' bgColor='#fff'/>;
-                                        })
-                                    }
-                                </div>
+                                {
+                                    cards_to_render.map(card => card)
+                                }
                             </div>
-                            {
-                                cardsToRender.map(card => card)
-                            }
                         </div>
         }
     }
