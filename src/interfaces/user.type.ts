@@ -7,5 +7,6 @@ export default interface IUser{
     sumary: string;
     email: string;
     backgroundColor: string,
+    backgroundImage: string,
     cards: Array<ICard>;
 }

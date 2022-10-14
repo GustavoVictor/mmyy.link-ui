@@ -9,15 +9,8 @@ type props = {
 export class Card extends React.Component<props> {
     render(){
         return <div className="card">
-            <div className="container">
-                <div>
-                    <p>{this.props.card.icon}</p>
-                </div>
-                <div>
-                    <h4>
-                        <p><b>{this.props.card.description}</b></p>
-                    </h4>
-                </div>
+            <div className="card-container">
+                <p><b>{this.props.card.description}</b></p>
             </div>
         </div>
     }

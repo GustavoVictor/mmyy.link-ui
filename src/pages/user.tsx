@@ -6,7 +6,7 @@ import IUser from '../interfaces/user.type';
 import './user.css'
 import { SocialIcon } from 'react-social-icons';
 import Gustavo from '../assets/gustavo.jpeg';
-import IItem from '../interfaces/item.type';
+import Login from './login';
 
 //Types
 type Props = {
@@ -39,7 +39,8 @@ class UserPageWithHookResult extends React.Component<Props, State>{
             lastName: 'Assunção',
             sumary: `Back-end developer 💻 (C# 💜💜) | React enthusiast 😃 | sometimes I'm a bartender as a hobby 🍸🍹`,
             email: 'gustavovictor94@gmail.com',
-            backgroundColor:'#ffc213',
+            backgroundColor:'#fbab7e',
+            backgroundImage: 'linear-gradient(62deg, #fbab7e 10%, #F7CE68 100%)', 
             cards: [{
                 id: '1',
                 index: 1,
@@ -142,6 +143,7 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 return <div>Carregando...</div>
             else {
                 document.body.style.backgroundColor = this.state.user.backgroundColor;
+                document.body.style.backgroundImage = this.state.user.backgroundImage;
                 
                 let _cards = this.state.user.cards.filter(card => card.group != 'social').sort((a, b) => a.index - b.index);
                 
@@ -161,9 +163,6 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                     return r;
                 }, new Array<ICard[]>());
 
-                console.log(card_groups);
-                
-                // const cardsLength = _cards.length ?? 0;
                 const cards_groups_length = card_groups.length;
                 let cards_to_render = new Array<ReactNode>();
 
@@ -203,15 +202,9 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                     AddSpacebtwCard(i, cards_groups_length, cards_to_render);
                 }
                 
-                // for (let i = 0; i < cardsLength; i++){
-                //     const card:ICard = _cards[i];
-                    
-                //     cards_to_render.push(<Card key={card.id} card={card}/>);
-                // }
-                
                 let social = this.state.user.cards.filter(card => card.group == 'social').sort((a, b) => a.index - b.index);
 
-                return <div className='container'>
+                return <div className='user-container'>
                             <div className='user'>
                                 <div className='profile'>
                                     <img className='logo' src={Gustavo} alt="profile picture"/>
@@ -241,6 +234,9 @@ class UserPageWithHookResult extends React.Component<Props, State>{
 
 export function UserPage(){
     const { nick } = useParams();
+
+    if(nick == undefined || nick == '')
+        return <Login />;
 
     // console.log('nick: ' + nick)
 

@@ -11,7 +11,7 @@
     width: 100%;
 }
 
-.container {
+.card-container {
     display: flex;
     flex-direction: row;
     align-items: center;
