@@ -69,8 +69,9 @@ export default class Login extends React.Component<Props, State> {
                             onChange={this.handlePasswordChange}
                         />
                     <br className="empty-space"/>
+                    <br className="empty-space"/>
                     <div className="login-btn-container">
-                        <button className='login-btn' type='submit'><b>And there we go!!</b></button>
+                        <button className='login-btn' type='submit'><b>And there we go!</b></button>
                     </div>
                 </form>
             </div>
