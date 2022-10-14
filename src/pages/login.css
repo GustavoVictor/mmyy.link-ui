@@ -9,12 +9,8 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    /* background-color: #FAACA8; */
-    /* background-image: linear-gradient(19deg, #fcaba6 0%, #95dfff, #4376f5 100%); */
-    /* background-image: linear-gradient(19deg, #eaad61, #efbc6f, #f5cc7e, #fadb8c, #ffeb9b); */
     background-color: #74EBD5;
     background-image: linear-gradient(90deg, #74EBD5 0%, #8496e8 100%);
-
     box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.5);
 }
 
@@ -46,7 +42,30 @@
     height: 1.5em;
     font-family: Timeburner;
     background-color: #74ead5;
-    border: solid;
+    border: 0px;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+.login-btn-alert1 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 15px;
+    height: 1.5em;
+    font-family: Timeburner;
+    background-color: #ea9974;
+    border: 0px;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+.login-btn-alert2 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 15px;
+    height: 1.5em;
+    font-family: Timeburner;
+    background-color: #eac574;
     border: 0px;
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
 }
@@ -62,11 +81,24 @@
 }
 
 .login-input {
-    height: 2em;
+    height: 1.7em;
+    font-size: 1em;
     margin-top: 10px;
     border-radius: 0%;
     border: 1px solid grey; 
-    
+    font-family: 'Timeburner';
+    text-align: center;
+}
+
+.login-input-empty {
+    height: 1.7em;
+    font-size: 1em;
+    margin-top: 10px;
+    border-radius: 0%;
+    border: 1px solid #ea9974; 
+    font-family: 'Timeburner';
+    text-align: center;
+    box-shadow: 1px 1px 4px 0px #ea9974;
 }
 
 .login-input:hover {
@@ -76,10 +108,20 @@
 }
 
 .login-input:focus {
-    /* transition: 0.2s; */
     outline: 2px solid #8496e8;
     box-shadow: 1px 1px 4px 0px #8497e8;
 }
+
+/* .login-input-empty:hover {
+    transition: 0.2s;
+    border: 1px solid #ea9974;
+    box-shadow: 1px 1px 4px 0px #ea9974;
+}
+
+.login-input-empty:focus {
+    outline: 2px solid #ea9974;
+    box-shadow: 1px 1px 4px 0px #ea9974;
+} */
 
 .empty-space {
     margin-bottom: 15px;

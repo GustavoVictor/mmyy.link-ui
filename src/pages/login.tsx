@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import './login.css'
 
 type Props = {
@@ -8,6 +8,8 @@ type Props = {
 type State = {
     email: string;
     password: string;
+    submitBtnEnable: boolean;
+    invalidEmail: boolean;
 }
 
 export default class Login extends React.Component<Props, State> {
@@ -16,10 +18,16 @@ export default class Login extends React.Component<Props, State> {
         
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            submitBtnEnable: true,
+            invalidEmail: false,
         }
     }
-
+    
+    private _invalidEmail: boolean = false;
+    private _emptyEmail: boolean = false;
+    private _emptyPassword: boolean = false;
+    
     handleSubmit = (e: React.SyntheticEvent): void => {
         e.preventDefault();
         const target = e.target as typeof e.target & {
@@ -30,15 +38,71 @@ export default class Login extends React.Component<Props, State> {
         const email = target.email.value;
         const password = target.password.value;
 
-        console.log({email, password});
+        if (!email || this._invalidEmail)
+            this._emptyEmail = true;
+
+        if (!password)
+            this._emptyPassword = true;
+
+        if (this._emptyPassword || this._emptyEmail)
+            this.forceUpdate();
     }
 
     handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({ email: e.currentTarget.value })
+        const email: string = e.currentTarget.value;
+
+        this.setState({ email: email });
+        
+        console.log(email);
     }
 
     handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({ password: e.currentTarget.value })
+        const password: string = e.currentTarget.value;
+        
+        this.setState({ password: password })
+
+        console.log(password);
+    }
+
+    changeEmptFields(email: string, password:string){
+        if (email)
+            this._emptyEmail = false;
+
+        if (password)
+            this._emptyPassword = false;
+    }
+
+    defineBtnSubmit(): ReactNode {
+        const email: string = this.state.email; 
+        const password: string = this.state.password;
+        let submitBtnEnable: boolean = false;
+        let invalidEmail: boolean = false;
+
+        this.changeEmptFields(email, password);
+
+        if (!email || !password)
+            submitBtnEnable = false;
+
+        if (email && password)
+            submitBtnEnable = true;
+
+        if (email && email.length > 5 && !email.includes('@'))
+            invalidEmail = true;    
+
+        if (email && email.length > 5 && email.includes('@'))
+            invalidEmail = false;    
+
+        if (invalidEmail)
+        {
+            this._invalidEmail = true;
+            return <button className='login-btn-alert1' type='submit'><b>Invalid e-mail!</b></button>;
+        }
+        
+        if(!submitBtnEnable)
+            return <button className='login-btn-alert2' type='submit'><b>Almost there!</b></button>;
+        
+        if (submitBtnEnable)
+            return <button className='login-btn' type='submit'><b>And there we go!</b></button>;
     }
 
     render(){
@@ -49,10 +113,10 @@ export default class Login extends React.Component<Props, State> {
                         <b>Your e-mail:</b>
                     </label>
                     <input
-                            className="login-input"
+                            className= { this._emptyEmail ? "login-input-empty"  : "login-input" }
                             name='email'
                             type='text'
-                            placeholder='e-mail'
+                            placeholder="that's used for boring stuff"
                             value={this.state.email}
                             onChange={this.handleEmailChange}
                         />
@@ -61,17 +125,17 @@ export default class Login extends React.Component<Props, State> {
                         <b>Password:</b>
                     </label>
                     <input
-                            className="login-input"
+                            className={ this._emptyPassword ? "login-input-empty"  : "login-input" }
                             name='password'
                             type='password'
-                            placeholder='password'
+                            placeholder='and here the magic word'
                             value={this.state.password}
                             onChange={this.handlePasswordChange}
                         />
                     <br className="empty-space"/>
                     <br className="empty-space"/>
                     <div className="login-btn-container">
-                        <button className='login-btn' type='submit'><b>And there we go!</b></button>
+                        { this.defineBtnSubmit() }
                     </div>
                 </form>
             </div>
