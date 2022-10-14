@@ -24,9 +24,9 @@ export default class Login extends React.Component<Props, State> {
         }
     }
     
-    private _invalidEmail: boolean = false;
     private _emptyEmail: boolean = false;
     private _emptyPassword: boolean = false;
+    private _hasNoError: boolean = false;
     
     handleSubmit = (e: React.SyntheticEvent): void => {
         e.preventDefault();
@@ -38,7 +38,7 @@ export default class Login extends React.Component<Props, State> {
         const email = target.email.value;
         const password = target.password.value;
 
-        if (!email || this._invalidEmail)
+        if (!email)
             this._emptyEmail = true;
 
         if (!password)
@@ -46,6 +46,10 @@ export default class Login extends React.Component<Props, State> {
 
         if (this._emptyPassword || this._emptyEmail)
             this.forceUpdate();
+
+        if (this._hasNoError){
+            console.log('login');
+        }
     }
 
     handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -102,7 +106,10 @@ export default class Login extends React.Component<Props, State> {
             return <button className='login-btn-alert2' type='submit'><b>Almost there!</b></button>;
         
         if (submitBtnEnable)
+        {
+            this._hasNoError = true;
             return <button className='login-btn' type='submit'><b>And there we go!</b></button>;
+        }
     }
 
     render(){
