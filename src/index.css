@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Timeburner, Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 1em;
   line-height: 20px;
   font-weight: 400;
@@ -19,4 +19,15 @@ body {
   margin: 0;
   display: flex;
   justify-content: center;
+}
+
+@font-face {
+  font-family: 'Timeburner';
+  src: local('Timeburner-xJB8'), url(./assets/fonts/Timeburner-xJB8.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Timeburner';
+  font-weight: bold;
+  src: local('Timeburner-xJB8'), url(./assets/fonts/TimeburnerBold-peGR.ttf) format('truetype');
 }

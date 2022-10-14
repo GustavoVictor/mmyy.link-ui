@@ -210,7 +210,7 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                                     <img className='logo' src={Gustavo} alt="profile picture"/>
 
                                     <div className='user-name'>
-                                        <h2>{ this.state.user.name } {this.state.user.lastName}</h2>
+                                        <h1>{ this.state.user.name } {this.state.user.lastName}</h1>
                                     </div>
 
                                     <div className='user-sumary'>{ this.state.user.sumary }</div>

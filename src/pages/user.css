@@ -56,8 +56,9 @@
 
 .user-sumary {
     display: inline;
-    font-weight: 200;
     color: white;
+    font-size: 1.1em;
+    line-height: 25px;
 }
 
 .card-group {

@@ -46,9 +46,10 @@ export default class Login extends React.Component<Props, State> {
             <div className='login'>
                 <form onSubmit={this.handleSubmit} className="login-label">
                     <label >
-                        Your e-mail:
+                        <b>Your e-mail:</b>
                     </label>
                     <input
+                            className="login-input"
                             name='email'
                             type='text'
                             placeholder='e-mail'
@@ -57,9 +58,10 @@ export default class Login extends React.Component<Props, State> {
                         />
                     <br className="empty-space"/>
                     <label className="login-label">
-                        Password:
+                        <b>Password:</b>
                     </label>
                     <input
+                            className="login-input"
                             name='password'
                             type='password'
                             placeholder='password'
@@ -67,7 +69,9 @@ export default class Login extends React.Component<Props, State> {
                             onChange={this.handlePasswordChange}
                         />
                     <br className="empty-space"/>
-                    <button type='submit'>And there we go!!</button>
+                    <div className="login-btn-container">
+                        <button className='login-btn' type='submit'><b>And there we go!!</b></button>
+                    </div>
                 </form>
             </div>
         </div>
