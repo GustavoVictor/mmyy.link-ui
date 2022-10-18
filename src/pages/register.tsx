@@ -199,13 +199,13 @@ export default class Register extends React.Component<Props, State> {
     handlePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const _password: string = e.target.value;
 
-        if (_password != undefined || _password != '')
+        if ((_password != undefined || _password != '') && _password.length > 0)
         {
             this.passwordIsEmpty = false;
             this.setBtnToOriginalLabel();
         }
 
-        if (this.state.password.length < 7)
+        if (_password.length < 8)
         {
             this.passwordIsInvalid = true;
             this.setState({btnLabel: 'Min 8 characters for password!'});
@@ -216,7 +216,6 @@ export default class Register extends React.Component<Props, State> {
             this.setBtnToOriginalLabel();
         }
 
-
         this.setState({password: _password});
     }
 
@@ -225,6 +224,22 @@ export default class Register extends React.Component<Props, State> {
 
         if (_confirmPassword != undefined || _confirmPassword != '')
             this.confirmPasswordIsEmpty = false;
+
+        if (this.state.password.length < 8
+            || _confirmPassword.length < 8)
+        {
+            this.passwordIsInvalid = true;
+            this.confirmPasswordIsInvalid = true;
+            this.setState({btnLabel: 'Min 8 characters for password!'});
+            this.setState({confirmPassword: _confirmPassword});
+            return;
+        }
+        else
+        {
+            this.passwordIsInvalid = false;
+            this.confirmPasswordIsInvalid = false;
+            this.setBtnToOriginalLabel();
+        }
 
         if (this.state.password.length == _confirmPassword.length
             && this.state.password != _confirmPassword)
@@ -308,7 +323,7 @@ export default class Register extends React.Component<Props, State> {
                             <b>Password:</b>
                         </label>
                         <input
-                            className={this.passwordIsEmpty ? 'is-empty' : 'register-input'}
+                            className={this.passwordIsInvalid ? 'is-invalid' : (this.passwordIsEmpty ? 'is-empty' : 'register-input')}
                             name='password'
                             type='password'
                             placeholder={this.passwordIsEmpty ? `don't forget me` : `use a strong word`}
