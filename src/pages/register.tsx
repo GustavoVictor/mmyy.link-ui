@@ -26,7 +26,7 @@ export default class Register extends React.Component<Props, State> {
             email: '',
             password: '',
             confirmPassword: '',
-            btnLabel: `Let's Go!`
+            btnLabel: 'Almost there'
         };
     }
     
@@ -63,38 +63,95 @@ export default class Register extends React.Component<Props, State> {
         const confirmPassword = target.confirmpassword.value;
 
         if (nick == undefined || nick == '')
+        {
             this.nickIsEmpty = true;
+            this.setState({btnLabel: 'Nick is empty!'});
+            return;
+        }
 
         if (firstName == undefined || firstName == '')
+        {
             this.firstNameIsEmpty = true;
+            this.setState({btnLabel: 'First name is empty!'});
+            return;
+        }
 
         if (lastName == undefined || lastName == '')
+        {
             this.lastNameIsEmpty = true;
+            this.setState({btnLabel: 'Last name is empty!'});
+            return;
+        }
 
         if (email == undefined || email == '')
+        {
             this.emailIsEmpty = true;
+            this.setState({btnLabel: 'E-mail is empty!'});
+            return;
+        }
 
         if (password == undefined || password == '')
+        {
             this.passwordIsEmpty = true;
+            this.setState({btnLabel: 'Password is empty!'});
+            return;
+        }
 
         if (confirmPassword == undefined || confirmPassword == '')
+        {
             this.confirmPasswordIsEmpty = true;
+            this.setState({btnLabel: 'Password check is empty!'});
+            return;
+        }
         
+        if (this.formInputsAreOk())
+        {
+            this.setState({btnLabel: `Let's Go!`});
+            console.log('formulário ok!')
+        }
+
         this.forceUpdate();
+    }
+
+    formInputsAreOk() : boolean {
+        if (this.nickIsEmpty || this.nickIsInvalid
+            || this.firstNameIsEmpty || this.firstNameIsInvalid
+            || this.lastNameIsEmpty || this.lastNameIsInvalid
+            || this.emailIsEmpty || this.emailIsInvalid
+            || this.passwordIsEmpty || this.passwordIsInvalid
+            || this.confirmPasswordIsEmpty || this.confirmPasswordIsInvalid)
+            return false;
+
+        return true;
+    }
+
+    setBtnToOriginalLabel(): void {
+        this.setState({btnLabel: `Almost there`});
     }
 
     handleNick = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const _nick: string = e.target.value;
-        const specialChars = `/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;`
+        const specialChars = `/[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]+/;`
 
         if (_nick != undefined || _nick != '')
+        {
             this.nickIsEmpty = false;
+            this.setBtnToOriginalLabel();
+        }
 
         const isSpecialCharsPresent = specialChars.split('').some(char => 
             _nick.includes(char))
 
         if (isSpecialCharsPresent)
-            this.nickIsInvalid;
+        {
+            this.nickIsInvalid = true;
+            this.setState({btnLabel: 'Say no to special characters!'});
+        }
+        else 
+        {
+            this.nickIsInvalid = false;
+            this.setBtnToOriginalLabel();
+        }
 
         this.setState({nick: _nick});
     }
@@ -103,7 +160,10 @@ export default class Register extends React.Component<Props, State> {
         const _fistName: string = e.target.value;
 
         if (_fistName != undefined || _fistName != '')
+        {
             this.firstNameIsEmpty = false;
+            this.setBtnToOriginalLabel();
+        }
 
         this.setState({firstName: _fistName});
     }
@@ -112,7 +172,10 @@ export default class Register extends React.Component<Props, State> {
         const _lastName: string = e.target.value;
 
         if (_lastName != undefined || _lastName != '')
+        {
             this.lastNameIsEmpty = false;
+            this.setBtnToOriginalLabel();
+        }
 
         this.setState({lastName: _lastName});
     }
@@ -121,7 +184,10 @@ export default class Register extends React.Component<Props, State> {
         const _email: string = e.target.value;
 
         if (_email != undefined || _email != '')
+        {
             this.emailIsEmpty = false;
+            this.setBtnToOriginalLabel();
+        }
 
         if (this.state.email.length > 5
             && !this.state.email.includes('@'))
@@ -134,10 +200,22 @@ export default class Register extends React.Component<Props, State> {
         const _password: string = e.target.value;
 
         if (_password != undefined || _password != '')
+        {
             this.passwordIsEmpty = false;
+            this.setBtnToOriginalLabel();
+        }
 
-        if (this.state.password.length < 8)
-            this.passwordIsInvalid;
+        if (this.state.password.length < 7)
+        {
+            this.passwordIsInvalid = true;
+            this.setState({btnLabel: 'Min 8 characters for password!'});
+        }
+        else
+        {
+            this.passwordIsInvalid = false;
+            this.setBtnToOriginalLabel();
+        }
+
 
         this.setState({password: _password});
     }
@@ -148,13 +226,19 @@ export default class Register extends React.Component<Props, State> {
         if (_confirmPassword != undefined || _confirmPassword != '')
             this.confirmPasswordIsEmpty = false;
 
-        if (this.state.password.length >= 8
-            && _confirmPassword.length >= 8
-            && this.state.password.length == _confirmPassword.length
+        if (this.state.password.length == _confirmPassword.length
             && this.state.password != _confirmPassword)
         {
             this.confirmPasswordIsInvalid = true;
-        }    
+            this.setState({btnLabel: `Password don't match!`});
+        }  
+        
+        if (this.state.password.length == _confirmPassword.length
+            && this.state.password == _confirmPassword)
+        {
+            this.confirmPasswordIsInvalid = false;
+            this.setBtnToOriginalLabel();
+        } 
             
         this.setState({confirmPassword: _confirmPassword});
     }
@@ -172,7 +256,7 @@ export default class Register extends React.Component<Props, State> {
                             <b>Nick: #</b>
                         </label>
                         <input
-                            className= {this.nickIsEmpty ? 'is-empty' : 'register-input'}
+                            className= {this.nickIsInvalid ? 'is-invalid' : (this.nickIsEmpty ? 'is-empty' : 'register-input')}
                             name='nick'
                             type='text'
                             placeholder={this.nickIsEmpty ? `don't forget me` : 'to find your page'}
@@ -237,7 +321,7 @@ export default class Register extends React.Component<Props, State> {
                             <b>Confirm Password:</b>
                         </label>
                         <input
-                            className={this.confirmPasswordIsEmpty ? 'is-empty' : 'register-input'}
+                            className={this.confirmPasswordIsInvalid ? 'is-invalid' : (this.confirmPasswordIsEmpty ? 'is-empty' : 'register-input')}
                             name='confirmpassword'
                             type='password'
                             placeholder={this.confirmPasswordIsEmpty ? `don't forget me` : 'repeat the word'}

@@ -111,7 +111,7 @@
 }
 
 .login-input:focus {
-    outline: 2px solid transparent;
+    outline: 1px solid transparent;
     box-shadow: 1px 1px 2px 0px #8497e8;
 }
 
