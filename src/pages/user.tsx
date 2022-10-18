@@ -1,12 +1,12 @@
 import React, { ReactNode } from 'react';
 import  { useParams }  from "react-router-dom";
+import { SocialIcon } from 'react-social-icons';
 import { Card } from '../components/card';
+import Gustavo from '../assets/gustavo.jpeg';
 import ICard from '../interfaces/card.type';
 import IUser from '../interfaces/user.type';
-import './user.css'
-import { SocialIcon } from 'react-social-icons';
-import Gustavo from '../assets/gustavo.jpeg';
 import Login from './login';
+import './user.css';
 
 //Types
 type Props = {
@@ -168,7 +168,7 @@ class UserPageWithHookResult extends React.Component<Props, State>{
 
                 function AddSpacebtwCard(i: number, lenght:number, list:Array<ReactNode>){
                     if (i > 0 && i < lenght)
-                    list.push(<div className='space-btw-card'></div>)
+                        list.push(<div className='space-btw-card'></div>)
                 }
 
                 for (let i = 0; i < cards_groups_length; i++){
@@ -237,8 +237,6 @@ export function UserPage(){
 
     if(nick == undefined || nick == '')
         return <Login />;
-
-    // console.log('nick: ' + nick)
 
     return <UserPageWithHookResult nick={nick} />;
 }

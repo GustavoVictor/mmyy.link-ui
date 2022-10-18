@@ -17,7 +17,6 @@
 .login {
     width: 40%;
     min-width: 60%;
-    max-width: 30%;
     padding: 20px;
     background-color: white;
     box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.5);
@@ -25,6 +24,7 @@
 
 .login-label {
     display: flex;
+    margin-bottom: 30px;
     flex-direction: column;
 }
 
@@ -40,6 +40,7 @@
     flex-direction: column;
     padding: 15px;
     height: 1.5em;
+    font-size: 1.0em;
     font-family: Timeburner;
     background-color: #74ead5;
     border: 0px;
@@ -52,6 +53,7 @@
     flex-direction: column;
     padding: 15px;
     height: 1.5em;
+    font-size: 1.0em;
     font-family: Timeburner;
     background-color: #ea9974;
     border: 0px;
@@ -64,6 +66,7 @@
     flex-direction: column;
     padding: 15px;
     height: 1.5em;
+    font-size: 1.0em;
     font-family: Timeburner;
     background-color: #eac574;
     border: 0px;
@@ -94,35 +97,66 @@
     height: 1.7em;
     font-size: 1em;
     margin-top: 10px;
-    border-radius: 0%;
-    border: 1px solid #ea9974; 
     font-family: 'Timeburner';
     text-align: center;
-    box-shadow: 1px 1px 4px 0px #ea9974;
+    border: 1px solid #ea9974; 
+    outline: 1px solid transparent;
+    box-shadow: 0px 1px 1px 0px #ea9974;
 }
 
 .login-input:hover {
     transition: 0.2s;
     border: 1px solid #8496e8;
-    box-shadow: 1px 1px 4px 0px #8497e8;
+    box-shadow: 1px 1px 2px 0px #8497e8;
 }
 
 .login-input:focus {
-    outline: 2px solid #8496e8;
-    box-shadow: 1px 1px 4px 0px #8497e8;
+    outline: 2px solid transparent;
+    box-shadow: 1px 1px 2px 0px #8497e8;
 }
 
-/* .login-input-empty:hover {
-    transition: 0.2s;
-    border: 1px solid #ea9974;
-    box-shadow: 1px 1px 4px 0px #ea9974;
+.login-create-account {
+    display: flex;
+    text-decoration: none;
+    color: #8497e8;
+    padding: 5px;
+    font-size: 0.9em;
 }
 
-.login-input-empty:focus {
-    outline: 2px solid #ea9974;
-    box-shadow: 1px 1px 4px 0px #ea9974;
-} */
+.login-create-account:hover {
+    text-decoration: underline;
+}
+
+
+.login-create-account-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 45px;
+    line-height: 20px;
+}
 
 .empty-space {
-    margin-bottom: 15px;
+    margin-bottom: 105px;
+}
+
+.login-title {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.login-line-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.login-line {
+    left: 0%;
+    display: flex;
+    margin-bottom: 40px;
+    width: 65%;
+    height: 0;
+    border: 1px solid #e6e3e3;
+    display: inline-block;
 }

@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { Link } from 'react-router-dom';
 import './login.css'
 
 type Props = {
@@ -56,16 +57,12 @@ export default class Login extends React.Component<Props, State> {
         const email: string = e.currentTarget.value;
 
         this.setState({ email: email });
-        
-        console.log(email);
     }
 
     handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const password: string = e.currentTarget.value;
         
         this.setState({ password: password })
-
-        console.log(password);
     }
 
     changeEmptFields(email: string, password:string){
@@ -97,10 +94,7 @@ export default class Login extends React.Component<Props, State> {
             invalidEmail = false;    
 
         if (invalidEmail)
-        {
-            this._invalidEmail = true;
             return <button className='login-btn-alert1' type='submit'><b>Invalid e-mail!</b></button>;
-        }
         
         if(!submitBtnEnable)
             return <button className='login-btn-alert2' type='submit'><b>Almost there!</b></button>;
@@ -115,34 +109,50 @@ export default class Login extends React.Component<Props, State> {
     render(){
         return <div className='login-container'>
             <div className='login'>
-                <form onSubmit={this.handleSubmit} className="login-label">
-                    <label >
-                        <b>Your e-mail:</b>
-                    </label>
-                    <input
-                            className= { this._emptyEmail ? "login-input-empty"  : "login-input" }
-                            name='email'
-                            type='text'
-                            placeholder="that's used for boring stuff"
-                            value={this.state.email}
-                            onChange={this.handleEmailChange}
-                        />
-                    <br className="empty-space"/>
-                    <label className="login-label">
-                        <b>Password:</b>
-                    </label>
-                    <input
-                            className={ this._emptyPassword ? "login-input-empty"  : "login-input" }
-                            name='password'
-                            type='password'
-                            placeholder='and here the magic word'
-                            value={this.state.password}
-                            onChange={this.handlePasswordChange}
-                        />
-                    <br className="empty-space"/>
-                    <br className="empty-space"/>
+                <div className="login-title">
+                    <h2><b>Login</b></h2>
+                </div>
+                <div className="login-line-container">
+                    <div className="login-line"></div>
+                </div>
+                <form onSubmit={this.handleSubmit}>
+                    <div>
+                        <div className="login-label">
+                            <label >
+                                <b>Your e-mail:</b>
+                            </label>
+                            <input
+                                    className= { this._emptyEmail ? "login-input-empty"  : "login-input" }
+                                    name='email'
+                                    type='email'
+                                    placeholder="that's used for boring stuff"
+                                    value={this.state.email}
+                                    onChange={this.handleEmailChange}
+                                />
+                        </div>
+                        <div className="login-label">
+                            <label>
+                                <b>Password:</b>
+                            </label>
+                            <input
+                                    className={ this._emptyPassword ? "login-input-empty"  : "login-input" }
+                                    name='password'
+                                    type='password'
+                                    placeholder='and here the magic word'
+                                    value={this.state.password}
+                                    onChange={this.handlePasswordChange}
+                                />
+                        </div>
+                    </div>
                     <div className="login-btn-container">
                         { this.defineBtnSubmit() }
+                    </div>
+                    <div>
+                        <div className="login-create-account-container">
+                            <Link className="login-create-account" to='/register'>
+                                <b>Create your account</b>
+                            </Link>
+                        </div>
                     </div>
                 </form>
             </div>
