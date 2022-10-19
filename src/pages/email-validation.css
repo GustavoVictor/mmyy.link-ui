@@ -1,0 +1,38 @@
+.email-validation-container {
+    position: absolute;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.5);
+    padding: 15px;
+}
+
+.email-validation-inputs-container {
+    flex-direction: row;
+}
+
+.email-validation-inputs {
+    margin: 25px 0px 25px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.email-validation-inputs:hover{
+    cursor:pointer;
+    box-shadow: 1px 1px 4px 0px #0093E9;
+}
+
+.email-validation-inputs:focus{
+    outline: 2px solid transparent;
+    box-shadow: 1px 1px 4px 0px #0093E9;
+}
+
+.email-validation-line {
+    width: 90%;
+    height: 0;
+    border: 1px solid #e6e3e3;
+    display: inline-block;
+    margin-bottom: 50px;
+}

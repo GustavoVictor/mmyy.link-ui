@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
+import UserService from '../services/user.service';
+import EmailValidation from './email-validation';
 import './register.css';
 
 type Props = {
@@ -6,6 +8,7 @@ type Props = {
 }
 
 type State = {
+    photoURL: string | undefined;
     nick: string;
     firstName: string;
     lastName: string;
@@ -13,6 +16,7 @@ type State = {
     password: string;
     confirmPassword: string;
     btnLabel: string;
+    step: number;
 }
 
 export default class Register extends React.Component<Props, State> {
@@ -20,29 +24,34 @@ export default class Register extends React.Component<Props, State> {
         super(props)
 
         this.state = {
+            photoURL: undefined,
             nick: '',
             firstName: '',
             lastName: '',
             email: '',
             password: '',
             confirmPassword: '',
-            btnLabel: 'Almost there'
+            btnLabel: 'Almost there',
+            step: 1
         };
+
+        this._userService = new UserService();
     }
-    
-    nickIsEmpty: boolean = false;
-    nickIsInvalid: boolean = false;
-    firstNameIsEmpty: boolean = false;
-    firstNameIsInvalid: boolean = false;
-    lastNameIsEmpty: boolean = false;
-    lastNameIsInvalid: boolean = false;
-    emailIsEmpty: boolean = false;
-    emailIsInvalid: boolean = false;
-    passwordIsEmpty: boolean = false;
-    passwordIsInvalid: boolean = false;
-    confirmPasswordIsEmpty: boolean = false;
-    confirmPasswordIsInvalid: boolean = false;
-    btnNextStep: boolean = false;
+
+    private readonly _userService: UserService;
+    private nickIsEmpty: boolean = false;
+    private nickIsInvalid: boolean = false;
+    private firstNameIsEmpty: boolean = false;
+    private firstNameIsInvalid: boolean = false;
+    private lastNameIsEmpty: boolean = false;
+    private lastNameIsInvalid: boolean = false;
+    private emailIsEmpty: boolean = false;
+    private emailIsInvalid: boolean = false;
+    private passwordIsEmpty: boolean = false;
+    private passwordIsInvalid: boolean = false;
+    private confirmPasswordIsEmpty: boolean = false;
+    private confirmPasswordIsInvalid: boolean = false;
+    private btnNextStep: boolean = false;
 
     handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -55,7 +64,7 @@ export default class Register extends React.Component<Props, State> {
             password: { value: string },
             confirmpassword: { value: string }
         };
-
+        
         const nick = target.nick.value;
         const firstName = target.firstname.value;
         const lastName = target.lastname.value;
@@ -92,6 +101,14 @@ export default class Register extends React.Component<Props, State> {
         if (this.allFieldsAreNotEmptyOrInvalid())
         {
             // this.setState({btnLabel: `Let's Go!`});
+            this._userService.create({
+                nick: this.state.nick,
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                email: this.state.email,
+                password: this.state.password
+            });
+            this.setState({step: 2});
         }
 
         this.forceUpdate();
@@ -112,6 +129,18 @@ export default class Register extends React.Component<Props, State> {
 
     setBtnToOriginalLabel(): void {
         this.setState({btnLabel: `Almost there`});
+    }
+
+    handlePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) {
+          return;
+        }
+
+        let src = URL.createObjectURL(e.target.files[0]);
+
+        this.setState({photoURL: src});
+        // handle the input...
+        console.log(src);
     }
 
     handleNick = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -139,7 +168,6 @@ export default class Register extends React.Component<Props, State> {
         }
 
         this.setState({nick: _nick});
-        // this.ifFormIsValidSetBtnToNextStep();
     }
 
     handleFistName = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -152,7 +180,6 @@ export default class Register extends React.Component<Props, State> {
         }
 
         this.setState({firstName: _fistName});
-        this.ifFormIsValidSetBtnToNextStep();
     }
 
     handleLastName = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -165,7 +192,6 @@ export default class Register extends React.Component<Props, State> {
         }
 
         this.setState({lastName: _lastName});
-        this.ifFormIsValidSetBtnToNextStep();
     }
 
     handleEmailName = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -186,7 +212,6 @@ export default class Register extends React.Component<Props, State> {
             this.emailIsInvalid = false;
 
         this.setState({email: _email});
-        this.ifFormIsValidSetBtnToNextStep();
     }
 
     handlePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -210,7 +235,6 @@ export default class Register extends React.Component<Props, State> {
         }
 
         this.setState({password: _password});
-        this.ifFormIsValidSetBtnToNextStep();
     }
 
     handleConfirmPassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -250,100 +274,118 @@ export default class Register extends React.Component<Props, State> {
         } 
             
         this.setState({confirmPassword: _confirmPassword});
-        this.ifFormIsValidSetBtnToNextStep();
+    }
+
+    showUserPhoto() : React.ReactNode{
+        if (this.state.photoURL == undefined)
+        {
+            return <div >
+                <label >Upload Image</label>
+                <input type="file" accept="image/*" onChange={(e) => this.handlePhoto(e)}/>       
+            </div>
+        } else {
+            return <div className='register-photo-container'>
+                <img width={100} src={ this.state.photoURL } />
+            </div>
+        }
+    }
+
+    getForm(): ReactNode{
+        return <div className='register-form'>
+                <div className='register-title'>
+                    <h2><b>Create account</b></h2>
+                </div>
+                <div className='line'></div>     
+                    <form onSubmit={this.handleSubmit}>
+                        {/* {this.showUserPhoto()} */}
+                        <div className='register-field'>
+                            <label className='register-form-label'>
+                                <b>Nick: </b>
+                            </label>
+                            <input
+                                className= {this.nickIsInvalid ? 'is-invalid' : (this.nickIsEmpty ? 'is-empty' : 'register-input')}
+                                name='nick'
+                                type='text'
+                                placeholder={this.nickIsEmpty ? `don't forget me` : 'to find your page'}
+                                value={this.state.nick}
+                                onChange={this.handleNick}/>
+                        </div>
+                        <br className="empty-space"/>
+                        <div className='register-field'>
+                            <label className='register-form-label'>
+                                <b>First name:</b>
+                            </label>
+                            <input
+                                className={this.firstNameIsEmpty ? 'is-empty' : 'register-input'}
+                                name='firstname'
+                                type='text'
+                                placeholder={this.firstNameIsEmpty ? `don't forget me` : 'that beautiful word'}
+                                value={this.state.firstName}
+                                onChange={this.handleFistName}/>
+                        </div>
+                        <br className="empty-space"/>
+                        <div className='register-field'>
+                            <label className='register-form-label'>
+                                <b>Last name:</b>
+                            </label>
+                            <input
+                                className={this.lastNameIsEmpty ? 'is-empty' : 'register-input'}
+                                name='lastname'
+                                type='text'
+                                placeholder={this.lastNameIsEmpty ? `don't forget me` : 'inherited for you'}
+                                value={this.state.lastName}
+                                onChange={this.handleLastName}/>
+                        </div>
+                        <br className="empty-space"/>
+                        <div className='register-field'>
+                            <label className='register-form-label'>
+                                <b>Email:</b>
+                            </label>
+                            <input
+                                className={this.emailIsEmpty ? 'is-empty' : 'register-input'}
+                                name='email'
+                                type='email'
+                                placeholder={this.emailIsEmpty ? `don't forget me` : 'to solve boring stuff...'}
+                                value={this.state.email}
+                                onChange={this.handleEmailName}/>
+                        </div>
+                        <br className="empty-space"/>
+                        <div className='register-field'>
+                            <label className='register-form-label'>
+                                <b>Password:</b>
+                            </label>
+                            <input
+                                className={this.passwordIsInvalid ? 'is-invalid' : (this.passwordIsEmpty ? 'is-empty' : 'register-input')}
+                                name='password'
+                                type='password'
+                                placeholder={this.passwordIsEmpty ? `don't forget me` : `use a strong word`}
+                                value={this.state.password}
+                                onChange={this.handlePassword}/>
+                        </div>
+                        <br className="empty-space"/>
+                        <div className='register-field'>
+                            <label className='register-form-label'>
+                                <b>Confirm Password:</b>
+                            </label>
+                            <input
+                                className={this.confirmPasswordIsInvalid ? 'is-invalid' : (this.confirmPasswordIsEmpty ? 'is-empty' : 'register-input')}
+                                name='confirmpassword'
+                                type='password'
+                                placeholder={this.confirmPasswordIsEmpty ? `don't forget me` : 'repeat the word'}
+                                value={this.state.confirmPassword}
+                                onChange={this.handleConfirmPassword}/>
+                        </div>
+                        <br className="empty-space"/>
+                        <div style={{display: 'flex', justifyContent:'center'}}>
+                            <button className={this.ifFormIsValidSetBtnToNextStep() ? 'register-form-btn-next-step' : 'register-form-btn'} type='submit'>{this.state.btnLabel}</button>
+                        </div>
+                    </form>
+            </div>
     }
 
     render(){
         return <div className='register-container'>
-            <div className='register-form'>
-                <div className='register-title'>
-                    <h2><b>Create account</b></h2>
-                </div>
-                <div className='line'></div>
-                <form onSubmit={this.handleSubmit}>
-                    <div className='register-field'>
-                        <label className='register-form-label'>
-                            <b>Nick: </b>
-                        </label>
-                        <input
-                            className= {this.nickIsInvalid ? 'is-invalid' : (this.nickIsEmpty ? 'is-empty' : 'register-input')}
-                            name='nick'
-                            type='text'
-                            placeholder={this.nickIsEmpty ? `don't forget me` : 'to find your page'}
-                            value={this.state.nick}
-                            onChange={this.handleNick}/>
-                    </div>
-                    <br className="empty-space"/>
-                    <div className='register-field'>
-                        <label className='register-form-label'>
-                            <b>First name:</b>
-                        </label>
-                        <input
-                            className={this.firstNameIsEmpty ? 'is-empty' : 'register-input'}
-                            name='firstname'
-                            type='text'
-                            placeholder={this.firstNameIsEmpty ? `don't forget me` : 'that beautiful word'}
-                            value={this.state.firstName}
-                            onChange={this.handleFistName}/>
-                    </div>
-                    <br className="empty-space"/>
-                    <div className='register-field'>
-                        <label className='register-form-label'>
-                            <b>Last name:</b>
-                        </label>
-                        <input
-                            className={this.lastNameIsEmpty ? 'is-empty' : 'register-input'}
-                            name='lastname'
-                            type='text'
-                            placeholder={this.lastNameIsEmpty ? `don't forget me` : 'inherited for you'}
-                            value={this.state.lastName}
-                            onChange={this.handleLastName}/>
-                    </div>
-                    <br className="empty-space"/>
-                    <div className='register-field'>
-                        <label className='register-form-label'>
-                            <b>Email:</b>
-                        </label>
-                        <input
-                            className={this.emailIsEmpty ? 'is-empty' : 'register-input'}
-                            name='email'
-                            type='email'
-                            placeholder={this.emailIsEmpty ? `don't forget me` : 'to solve boring stuff...'}
-                            value={this.state.email}
-                            onChange={this.handleEmailName}/>
-                    </div>
-                    <br className="empty-space"/>
-                    <div className='register-field'>
-                        <label className='register-form-label'>
-                            <b>Password:</b>
-                        </label>
-                        <input
-                            className={this.passwordIsInvalid ? 'is-invalid' : (this.passwordIsEmpty ? 'is-empty' : 'register-input')}
-                            name='password'
-                            type='password'
-                            placeholder={this.passwordIsEmpty ? `don't forget me` : `use a strong word`}
-                            value={this.state.password}
-                            onChange={this.handlePassword}/>
-                    </div>
-                    <br className="empty-space"/>
-                    <div className='register-field'>
-                        <label className='register-form-label'>
-                            <b>Confirm Password:</b>
-                        </label>
-                        <input
-                            className={this.confirmPasswordIsInvalid ? 'is-invalid' : (this.confirmPasswordIsEmpty ? 'is-empty' : 'register-input')}
-                            name='confirmpassword'
-                            type='password'
-                            placeholder={this.confirmPasswordIsEmpty ? `don't forget me` : 'repeat the word'}
-                            value={this.state.confirmPassword}
-                            onChange={this.handleConfirmPassword}/>
-                    </div>
-                    <br className="empty-space"/>
-                    <div style={{display: 'flex', justifyContent:'center'}}>
-                        <button className={this.ifFormIsValidSetBtnToNextStep() ? 'register-form-btn-next-step' : 'register-form-btn'} type='submit'>{this.state.btnLabel}</button>
-                    </div>
-                </form>
-            </div>
+            { this.state.step == 1 ? this.getForm() : <EmailValidation email={this.state.email}/> }
         </div>
     }
 } 

@@ -25,6 +25,37 @@
     background-color: #fff;
 }
 
+.register-photo-container {
+    display: flex;
+    justify-content: center;
+    max-height: 100px;
+}
+
+.register-photo-container img {
+    width:100%;
+    display:none;
+    margin-bottom:30px;
+}
+
+.register-photo-container input {
+    display:none;
+}
+
+.register-photo-container label {
+    display:block;
+    width:45%;
+    height:45px;
+    margin-left: 25%;
+    line-height:50px;
+    text-align:center;
+    background:#1172c2;
+    color:#fff;
+    font-size:15px;
+    text-transform:Uppercase;
+    border-radius:5px;
+    cursor:pointer;
+}
+
 .register-title {
     margin-bottom: 15px;
 }

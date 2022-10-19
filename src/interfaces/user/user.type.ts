@@ -1,4 +1,4 @@
-import ICard from "./card.type";
+import ICard from "../card.type";
 
 export default interface IUser{
     name: string;

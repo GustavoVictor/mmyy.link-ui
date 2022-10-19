@@ -4,7 +4,7 @@ import { SocialIcon } from 'react-social-icons';
 import { Card } from '../components/card';
 import Gustavo from '../assets/gustavo.jpeg';
 import ICard from '../interfaces/card.type';
-import IUser from '../interfaces/user.type';
+import IUser from '../interfaces/user/user.type';
 import Login from './login';
 import './user.css';
 
