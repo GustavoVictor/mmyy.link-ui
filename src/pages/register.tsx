@@ -42,6 +42,7 @@ export default class Register extends React.Component<Props, State> {
     passwordIsInvalid: boolean = false;
     confirmPasswordIsEmpty: boolean = false;
     confirmPasswordIsInvalid: boolean = false;
+    btnNextStep: boolean = false;
 
     handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -66,63 +67,47 @@ export default class Register extends React.Component<Props, State> {
         {
             this.nickIsEmpty = true;
             this.setState({btnLabel: 'Nick is empty!'});
-            return;
-        }
-
-        if (firstName == undefined || firstName == '')
+        } else if (firstName == undefined || firstName == '')
         {
             this.firstNameIsEmpty = true;
             this.setState({btnLabel: 'First name is empty!'});
-            return;
-        }
-
-        if (lastName == undefined || lastName == '')
+        } else if (lastName == undefined || lastName == '')
         {
             this.lastNameIsEmpty = true;
             this.setState({btnLabel: 'Last name is empty!'});
-            return;
-        }
-
-        if (email == undefined || email == '')
+        } else if (email == undefined || email == '')
         {
             this.emailIsEmpty = true;
             this.setState({btnLabel: 'E-mail is empty!'});
-            return;
-        }
-
-        if (password == undefined || password == '')
+        } else if (password == undefined || password == '')
         {
             this.passwordIsEmpty = true;
             this.setState({btnLabel: 'Password is empty!'});
-            return;
-        }
-
-        if (confirmPassword == undefined || confirmPassword == '')
+        } else if (confirmPassword == undefined || confirmPassword == '')
         {
             this.confirmPasswordIsEmpty = true;
             this.setState({btnLabel: 'Password check is empty!'});
-            return;
         }
         
-        if (this.formInputsAreOk())
+        if (this.allFieldsAreNotEmptyOrInvalid())
         {
-            this.setState({btnLabel: `Let's Go!`});
-            console.log('formulário ok!')
+            // this.setState({btnLabel: `Let's Go!`});
         }
 
         this.forceUpdate();
     }
 
-    formInputsAreOk() : boolean {
-        if (this.nickIsEmpty || this.nickIsInvalid
-            || this.firstNameIsEmpty || this.firstNameIsInvalid
-            || this.lastNameIsEmpty || this.lastNameIsInvalid
-            || this.emailIsEmpty || this.emailIsInvalid
-            || this.passwordIsEmpty || this.passwordIsInvalid
-            || this.confirmPasswordIsEmpty || this.confirmPasswordIsInvalid)
-            return false;
+    ifFormIsValidSetBtnToNextStep(): boolean {
+        return this.allFieldsAreNotEmptyOrInvalid();
+    }
 
-        return true;
+    allFieldsAreNotEmptyOrInvalid() : boolean {
+        return !this.nickIsEmpty && !this.nickIsInvalid
+            && !this.firstNameIsEmpty && !this.firstNameIsInvalid
+            && !this.lastNameIsEmpty && !this.lastNameIsInvalid
+            && !this.emailIsEmpty && !this.emailIsInvalid
+            && !this.passwordIsEmpty && !this.passwordIsInvalid
+            && !this.confirmPasswordIsEmpty && !this.confirmPasswordIsInvalid;
     }
 
     setBtnToOriginalLabel(): void {
@@ -154,6 +139,7 @@ export default class Register extends React.Component<Props, State> {
         }
 
         this.setState({nick: _nick});
+        // this.ifFormIsValidSetBtnToNextStep();
     }
 
     handleFistName = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -166,6 +152,7 @@ export default class Register extends React.Component<Props, State> {
         }
 
         this.setState({firstName: _fistName});
+        this.ifFormIsValidSetBtnToNextStep();
     }
 
     handleLastName = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -178,6 +165,7 @@ export default class Register extends React.Component<Props, State> {
         }
 
         this.setState({lastName: _lastName});
+        this.ifFormIsValidSetBtnToNextStep();
     }
 
     handleEmailName = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -193,7 +181,12 @@ export default class Register extends React.Component<Props, State> {
             && !this.state.email.includes('@'))
             this.emailIsInvalid = true;
 
+        if (this.state.email.length > 5
+            && this.state.email.includes('@'))
+            this.emailIsInvalid = false;
+
         this.setState({email: _email});
+        this.ifFormIsValidSetBtnToNextStep();
     }
 
     handlePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -217,6 +210,7 @@ export default class Register extends React.Component<Props, State> {
         }
 
         this.setState({password: _password});
+        this.ifFormIsValidSetBtnToNextStep();
     }
 
     handleConfirmPassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -256,6 +250,7 @@ export default class Register extends React.Component<Props, State> {
         } 
             
         this.setState({confirmPassword: _confirmPassword});
+        this.ifFormIsValidSetBtnToNextStep();
     }
 
     render(){
@@ -268,7 +263,7 @@ export default class Register extends React.Component<Props, State> {
                 <form onSubmit={this.handleSubmit}>
                     <div className='register-field'>
                         <label className='register-form-label'>
-                            <b>Nick: #</b>
+                            <b>Nick: </b>
                         </label>
                         <input
                             className= {this.nickIsInvalid ? 'is-invalid' : (this.nickIsEmpty ? 'is-empty' : 'register-input')}
@@ -345,7 +340,7 @@ export default class Register extends React.Component<Props, State> {
                     </div>
                     <br className="empty-space"/>
                     <div style={{display: 'flex', justifyContent:'center'}}>
-                        <button className='register-form-btn' type='submit'>{this.state.btnLabel}</button>
+                        <button className={this.ifFormIsValidSetBtnToNextStep() ? 'register-form-btn-next-step' : 'register-form-btn'} type='submit'>{this.state.btnLabel}</button>
                     </div>
                 </form>
             </div>
