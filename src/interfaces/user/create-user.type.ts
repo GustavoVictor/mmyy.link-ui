@@ -1,7 +1,8 @@
 export default interface ICreateUser {
-    nick: string;
+    nickName: string;
     firstName: string;
     lastName: string;
     email: string;
     password: string;
+    roles: Array<string>;
 }

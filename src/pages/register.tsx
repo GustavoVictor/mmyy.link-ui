@@ -100,15 +100,18 @@ export default class Register extends React.Component<Props, State> {
         
         if (this.allFieldsAreNotEmptyOrInvalid())
         {
-            // this.setState({btnLabel: `Let's Go!`});
             this._userService.create({
-                nick: this.state.nick,
+                nickName: this.state.nick,
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 email: this.state.email,
-                password: this.state.password
+                password: this.state.password,
+                roles: ['USER']
+            }).then(() => {
+
+                this.setState({step: 2});
             });
-            this.setState({step: 2});
+
         }
 
         this.forceUpdate();
@@ -203,12 +206,12 @@ export default class Register extends React.Component<Props, State> {
             this.setBtnToOriginalLabel();
         }
 
-        if (this.state.email.length > 5
-            && !this.state.email.includes('@'))
+        if (_email.length > 5
+            && !_email.includes('@'))
             this.emailIsInvalid = true;
 
-        if (this.state.email.length > 5
-            && this.state.email.includes('@'))
+        if (_email.length > 5
+            && _email.includes('@'))
             this.emailIsInvalid = false;
 
         this.setState({email: _email});

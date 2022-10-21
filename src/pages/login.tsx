@@ -24,8 +24,11 @@ export default class Login extends React.Component<Props, State> {
             submitBtnEnable: true,
             invalidEmail: false,
         }
+
+        this.userService = new UserService();
     }
     
+    private readonly userService: UserService;
     private _emptyEmail: boolean = false;
     private _emptyPassword: boolean = false;
     private _hasNoError: boolean = false;
@@ -51,6 +54,8 @@ export default class Login extends React.Component<Props, State> {
 
         if (this._hasNoError){
             console.log('login');
+
+            this.userService.
         }
     }
 

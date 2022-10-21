@@ -1,8 +1,8 @@
 import axios from "axios"
 
 export const api = axios.create({
-    withCredentials: true,
-    baseURL: "https://localhost/api/v1"
+    withCredentials: false,
+    baseURL: "https://localhost:7045/api/v1"
 })
 
 const errorHandler = (error: any) => {
@@ -16,6 +16,7 @@ const errorHandler = (error: any) => {
 }
 
 api.defaults.headers.common['Content-Type'] = 'application/json';
+// api.defaults.headers.common['Access-Control-Allow-Origin'] = 'https://localhost:7045';
 
 axios.interceptors.request.use(
     async (config) => {
