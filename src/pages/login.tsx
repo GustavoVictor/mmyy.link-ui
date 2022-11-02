@@ -1,7 +1,9 @@
 import React, { ReactNode } from "react";
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import UserService from "../services/user.service";
 import './login.css'
+import ILoggedUser from "../interfaces/user/logged-user.type";
+
 
 type Props = {
 
@@ -12,6 +14,7 @@ type State = {
     password: string;
     submitBtnEnable: boolean;
     invalidEmail: boolean;
+    loggedUser: boolean;
 }
 
 export default class Login extends React.Component<Props, State> {
@@ -23,6 +26,7 @@ export default class Login extends React.Component<Props, State> {
             password: '',
             submitBtnEnable: true,
             invalidEmail: false,
+            loggedUser: false
         }
 
         this.userService = new UserService();
@@ -32,8 +36,9 @@ export default class Login extends React.Component<Props, State> {
     private _emptyEmail: boolean = false;
     private _emptyPassword: boolean = false;
     private _hasNoError: boolean = false;
+    private _userlogged: boolean = false;
     
-    handleSubmit = (e: React.SyntheticEvent): void => {
+    handleSubmit = async (e: React.SyntheticEvent): Promise<void> => {
         e.preventDefault();
         const target = e.target as typeof e.target & {
             email: { value: string },
@@ -53,9 +58,10 @@ export default class Login extends React.Component<Props, State> {
             this.forceUpdate();
 
         if (this._hasNoError){
-            console.log('login');
-
-            this.userService.
+            let leggedUser:ILoggedUser | undefined = await this.userService.login(email, password);
+            
+            if (leggedUser != undefined)
+                this.setState({loggedUser: true});
         }
     }
 
@@ -113,55 +119,59 @@ export default class Login extends React.Component<Props, State> {
     }
 
     render(){
-        return <div className='login-container'>
-            <div className='login'>
-                <div className="login-title">
-                    <h2><b>Login</b></h2>
+        return (
+        <>
+            {this.state.loggedUser && (<Navigate to={`/${this.userService.loggedUser()?.nick}?myAccount=true`} />)}
+            <div className='login-container'>
+                <div className='login'>
+                    <div className="login-title">
+                        <h2><b>Login</b></h2>
+                    </div>
+                    <div className="login-line-container">
+                        <div className="login-line"></div>
+                    </div>
+                    <form onSubmit={this.handleSubmit}>
+                        <div>
+                            <div className="login-label">
+                                <label >
+                                    <b>Your e-mail:</b>
+                                </label>
+                                <input
+                                        className= { this._emptyEmail ? "login-input-empty"  : "login-input" }
+                                        name='email'
+                                        type='email'
+                                        placeholder="that's used for boring stuff"
+                                        value={this.state.email}
+                                        onChange={this.handleEmailChange}
+                                    />
+                            </div>
+                            <div className="login-label">
+                                <label>
+                                    <b>Password:</b>
+                                </label>
+                                <input
+                                        className={ this._emptyPassword ? "login-input-empty"  : "login-input" }
+                                        name='password'
+                                        type='password'
+                                        placeholder='and here the magic word'
+                                        value={this.state.password}
+                                        onChange={this.handlePasswordChange}
+                                    />
+                            </div>
+                        </div>
+                        <div className="login-btn-container">
+                            { this.defineBtnSubmit() }
+                        </div>
+                        <div>
+                            <div className="login-create-account-container">
+                                <Link className="login-create-account" to='/register'>
+                                    <b>Create your account</b>
+                                </Link>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div className="login-line-container">
-                    <div className="login-line"></div>
-                </div>
-                <form onSubmit={this.handleSubmit}>
-                    <div>
-                        <div className="login-label">
-                            <label >
-                                <b>Your e-mail:</b>
-                            </label>
-                            <input
-                                    className= { this._emptyEmail ? "login-input-empty"  : "login-input" }
-                                    name='email'
-                                    type='email'
-                                    placeholder="that's used for boring stuff"
-                                    value={this.state.email}
-                                    onChange={this.handleEmailChange}
-                                />
-                        </div>
-                        <div className="login-label">
-                            <label>
-                                <b>Password:</b>
-                            </label>
-                            <input
-                                    className={ this._emptyPassword ? "login-input-empty"  : "login-input" }
-                                    name='password'
-                                    type='password'
-                                    placeholder='and here the magic word'
-                                    value={this.state.password}
-                                    onChange={this.handlePasswordChange}
-                                />
-                        </div>
-                    </div>
-                    <div className="login-btn-container">
-                        { this.defineBtnSubmit() }
-                    </div>
-                    <div>
-                        <div className="login-create-account-container">
-                            <Link className="login-create-account" to='/register'>
-                                <b>Create your account</b>
-                            </Link>
-                        </div>
-                    </div>
-                </form>
             </div>
-        </div>
+        </>)
     }
 }

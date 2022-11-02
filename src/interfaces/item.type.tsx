@@ -1,5 +1,5 @@
 export default interface IItem{
-    icon: string,
+    // icon: string,
     description: string,
     URL: string
 }

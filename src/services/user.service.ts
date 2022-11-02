@@ -1,11 +1,11 @@
 import { UserAPI } from "../apis/user-api";
 import ICreateUser from "../interfaces/user/create-user.type";
-import IUser from "../interfaces/user/user.type";
+import IInfoUser from "../interfaces/user/info-user.type";
 import jwt_decode from 'jwt-decode';
+import ILoggedUser from "../interfaces/user/logged-user.type";
 
 export default class UserService {
-
-    userInfo(): IUser | undefined {
+    loggedUser(): ILoggedUser| undefined {
         let token = localStorage.getItem("token");
 
         if (!token)
@@ -13,32 +13,44 @@ export default class UserService {
         
         const parsedToken = JSON.parse(token);
 
-        let _decodeJwt = jwt_decode(parsedToken);
-
-        let decodeJwt:any;
+        let decodeJwt = jwt_decode<any>(parsedToken);
 
         return {
-            name: decodeJwt.name,
-            nickName: decodeJwt.nickName,
-            lastName: decodeJwt.lastName,
-            sumary: decodeJwt.sumary,
+            id: decodeJwt.jti,
             email: decodeJwt.email,
-            backgroundColor: decodeJwt.backgroundColor ?? '#000',
-            backgroundImage: decodeJwt.backgroundImage ?? '#000',
-            cards: []
+            nick: decodeJwt.unique_name,
+            firstName: decodeJwt.given_name,
+            lastName: decodeJwt.family_name,
+            expirationToken: decodeJwt.exp,
+            roles: decodeJwt.roles as string[]
         }
+    } 
+    
+    async userInfo(nick: string) : Promise<IInfoUser | undefined> {
+        let user:IInfoUser | undefined = await UserAPI.userInfo(nick);
+        
+        if (user == undefined)
+            return undefined;
+
+        return user;
     }
 
-    async login(email: string, password: string)
-    {
+    async login(email: string, password: string): Promise< ILoggedUser| undefined> {
+        let token:string | undefined = await UserAPI.login({email: email, password: password});
         
+        if (token == undefined && !token)
+            return undefined;
+
+        this.storeToken(token);
+        
+        return this.loggedUser();
     }
 
     async create(user: ICreateUser): Promise<boolean> {
         let token:string | undefined = await UserAPI.create(user);
         
         if (token == undefined && !token)
-            return true;
+            return false;
 
         this.storeToken(token);
         
