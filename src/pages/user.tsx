@@ -9,8 +9,9 @@ import Login from './login';
 import './user.css';
 import UserService from '../services/user.service';
 import ILoggedUser from '../interfaces/user/logged-user.type';
-import plus from '../assets/plus-solid.svg';
-import { Popup } from '../components/add-social-pop-up';
+import { SocialPopup } from '../components/add-social-card-pop-up';
+import { Popup } from '../components/add-card-pop-up';
+import { GroupPopup } from '../components/add-group-pop-up';
 
 //Types
 type Props = {
@@ -20,8 +21,11 @@ type Props = {
 
 type State = {
     addSocialCardsModalOpen: boolean;
+    addGroupCardsModalOpen: boolean;
+    addCardsModalOpen: boolean;
     userInfo: IInfoUser | undefined;
     redirectUser: boolean;
+    showSumaryInput: boolean;
 }
 
 class UserPageWithHookResult extends React.Component<Props, State>{
@@ -30,8 +34,11 @@ class UserPageWithHookResult extends React.Component<Props, State>{
         
         this.setState({
             addSocialCardsModalOpen: false,
+            addGroupCardsModalOpen: false,
+            addCardsModalOpen: false,
             redirectUser: false,
-            userInfo: undefined
+            userInfo: undefined,
+            showSumaryInput: false
         })
 
         this._userService = new UserService();
@@ -66,7 +73,6 @@ class UserPageWithHookResult extends React.Component<Props, State>{
         this.setState((state) => ({
             userInfo: userInfo
         }));
-        
         
         // this.FetchUser();
     }
@@ -181,16 +187,16 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 {
                     this._canEdit && 
                     <button className='social-card-empty' onClick={() => this.setState({addSocialCardsModalOpen: true})}>
-                        <div>
-                            <p><b>Add</b></p>
+                        <div style={{fontFamily:'Timeburner', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                            <b>Add social</b>
                             {/* <img style={{width: '35px', height: '35px'}} src={plus} className="plus icon" alt="Add card" /> */}
                         </div>
                     </button>
                 }
                 {
                     this._social.map(social => {
-                        return <div key={social.index} className='social-card-remove' onClick={(e) => this.removeSocialCard(e, social.index)}>
-                            <SocialIcon  key={social.index} url={social.URL} style={{pointerEvents: 'none'}} className={this._canEdit ? 'social-card-to-remove' : 'social-card'} label={social.description} fgColor='#242424' bgColor='#fff'/>
+                        return <div key={social.index} className={this._canEdit ? 'social-card-remove' : 'social-card'} onClick={(e) => this.removeSocialCard(e, social.index)}>
+                            <SocialIcon  key={social.index} url={social.URL} style={{margin: '0px', pointerEvents: 'none'}} className={this._canEdit ? 'social-card-to-remove' : 'social-card'} label={social.description} fgColor='#242424' bgColor='#fff'/>
                         </div>
                     })
                 }
@@ -205,27 +211,44 @@ class UserPageWithHookResult extends React.Component<Props, State>{
         if (userInfo != null 
             || userInfo != undefined)
         {
-            console.log( userInfo.cards);
             userInfo.cards = userInfo.cards.filter(card => card.group == 'social' && card.index != key).sort((a, b) => a.index - b.index);
-            // this.state.userInfo.cards.filter(card => card.group == 'social').sort((a, b) => a.index - b.index);
-            const listLeght = userInfo.cards.length + 1;
-            
+
             for (let i = Number(key) - 1; i <= userInfo.cards.length - 1; i++){
                 let card = userInfo.cards[i];
 
-                console.log(card)
                 card.index -= 1;
 
                 userInfo.cards[i] = card;
             }
-            console.log(userInfo.cards);
         }
 
         this.setState({
             userInfo: userInfo
         })
+    }
 
-        console.log(key)
+    removeCard(e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: Key){
+        e.preventDefault();
+
+        let userInfo = this.state.userInfo;
+
+        if (userInfo != null 
+            || userInfo != undefined)
+        {
+            userInfo.cards = userInfo.cards.filter(card => card.index != key).sort((a, b) => a.index - b.index);
+
+            for (let i = Number(key) - 1; i <= userInfo.cards.length - 1; i++){
+                let card = userInfo.cards.filter(card => card.group != 'social')[i];
+
+                card.index -= 1;
+
+                userInfo.cards[i] = card;
+            }
+        }
+
+        this.setState({
+            userInfo: userInfo
+        })
     }
     
     addSocialCard(e: React.SyntheticEvent, userInfo: IInfoUser | undefined, addSocialCardsModalOpen: () => void){
@@ -238,11 +261,8 @@ class UserPageWithHookResult extends React.Component<Props, State>{
             groupPosition: { value: number | undefined }
         };
 
-        // const description = target.description.value ?? '';
         const url = target.url.value ?? '';
         let cardPosition = target.cardPosition?.value;
-        // const group = target.group.value ?? '';
-        // const groupPosition = target.groupPosition.value ?? 0;
 
         if (userInfo == null || userInfo == undefined)
             return;
@@ -250,14 +270,6 @@ class UserPageWithHookResult extends React.Component<Props, State>{
         if (cardPosition == undefined 
             || cardPosition == 0)
             cardPosition = userInfo.cards.length + 1; 
-
-        console.log({
-            index: cardPosition,
-            group: 'social',
-            index_group: 0,
-            description: '',
-            URL: url,
-        });
 
         userInfo.cards.push({
             index: cardPosition,
@@ -267,13 +279,132 @@ class UserPageWithHookResult extends React.Component<Props, State>{
             URL: url,
         })
 
-        console.log(userInfo.cards)
-
         addSocialCardsModalOpen();
     }
 
-    ShowSocialCardModal() : ReactNode {
-        return this.state.addSocialCardsModalOpen ? <Popup addSocialCardsModalOpen={() => this.setState({addSocialCardsModalOpen: false})} userInfo={this.state.userInfo} addSocialCard={this.addSocialCard} closePopup={() => this.setState({addSocialCardsModalOpen: false})} /> : null;
+    addGroupCard(e: React.SyntheticEvent, userInfo: IInfoUser | undefined, addGroupCardsModalOpen: () => void){
+        e.preventDefault();
+        const target = e.target as typeof e.target & {
+            // description: { value: string | undefined },
+            // url: { value: string | undefined },
+            // cardPosition: { value: number | undefined },
+            group: { value: string | undefined },
+            groupPosition: { value: number | undefined }
+        };
+
+        // const description = target.description.value ?? '';
+        // const url = target.url?.value ?? '';
+        // let cardPosition = target.cardPosition?.value ?? 0;
+        const group = target.group?.value ?? '';
+        let groupPosition = target.groupPosition?.value;
+
+        if (userInfo == null || userInfo == undefined)
+            return;
+
+        if (groupPosition == undefined 
+            || groupPosition == 0)
+            groupPosition = userInfo.cards.length + 1; 
+
+        userInfo.cards.push({
+            index: 0,
+            group: group,
+            index_group: userInfo.cards.length + 1,
+            description: '',
+            URL: '',
+        })
+
+        console.log({
+            index: 0,
+            group: group,
+            index_group: groupPosition,
+            description: '',
+            URL: '',
+        })
+
+        addGroupCardsModalOpen();
+    }
+
+    addCard(e: React.SyntheticEvent, userInfo: IInfoUser | undefined, addCardsModalOpen: () => void){
+        e.preventDefault();
+        const target = e.target as typeof e.target & {
+            description: { value: string | undefined },
+            url: { value: string | undefined }
+        };
+
+        const description = target.description.value ?? '';
+        const url = target.url?.value ?? '';
+        let cardPosition = 0;
+
+        if (userInfo == null || userInfo == undefined)
+            return;
+
+        if (cardPosition == undefined 
+            || cardPosition == 0)
+            cardPosition = userInfo.cards.length + 1; 
+
+        userInfo.cards.push({
+            index: cardPosition,
+            group: undefined,
+            index_group: undefined,
+            description: description,
+            URL: url,
+        })
+
+        console.log({
+            index: cardPosition,
+            group: undefined,
+            index_group: undefined,
+            description: description,
+            URL: url,
+        });
+
+        console.log(userInfo.cards);
+
+        addCardsModalOpen();
+    }
+
+    showSocialCardModal() : ReactNode {
+        return this.state.addSocialCardsModalOpen ? <SocialPopup addSocialCardsModalOpen={() => this.setState({addSocialCardsModalOpen: false})} userInfo={this.state.userInfo} addSocialCard={this.addSocialCard} closePopup={() => this.setState({addSocialCardsModalOpen: false})} /> : null;
+    }
+
+    showGroupCardModal() : ReactNode {
+        return this.state.addGroupCardsModalOpen ? <GroupPopup addGroupCardsModalOpen={() => this.setState({addGroupCardsModalOpen: false})} userInfo={this.state.userInfo} addGroupCard={this.addGroupCard} closePopup={() => this.setState({addGroupCardsModalOpen: false})} /> : null;
+    }
+
+    showCardModal() : ReactNode {
+        return this.state.addCardsModalOpen ? <Popup addCardsModalOpen={() => this.setState({addCardsModalOpen: false})} userInfo={this.state.userInfo} addCard={this.addCard} closePopup={() => this.setState({addCardsModalOpen: false})} /> : null;
+    }
+
+    sumary(): ReactNode {
+        if (this._canEdit)
+        {
+            if (this.state.showSumaryInput){
+                return (
+                    <>
+                        <textarea
+                            className= 'user-sumary-input' 
+                            value={ this.state.userInfo?.sumary }
+                            onChange={(e) => { 
+                                const value = e.currentTarget.value;
+                                let user = this.state.userInfo;
+                                if (user != null){
+                                    user.sumary = value;
+                                    this.setState({userInfo: user}); 
+                                }
+                            } } >
+                        </textarea>
+                        <button onClick={() => {this.setState({showSumaryInput: false})}} style={{marginTop:'10px', alignSelf: 'end'}}>Ok</button>
+                    </>
+                )
+            }
+            else
+                return <div onClick={() => {this.setState({showSumaryInput: true})}} className='user-sumary-edit'>{ this.state.userInfo?.sumary ?? ''}</div>
+            
+        }
+        else
+        {
+            return <div className='user-sumary'>{ this.state.userInfo?.sumary ?? ''}</div>
+        }
     }
 
     render(){
@@ -282,7 +413,7 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 return <div>User not found...</div>
             else if (this.state == null 
                 || this.state.userInfo == undefined)
-                return <div>Carregando...</div>
+                return <div>Load...</div>
             else {
                 document.body.style.backgroundColor = this.state.userInfo.backgroundColor ?? '#fbab7e';
                 document.body.style.backgroundImage = this.state.userInfo.backgroundImage ?? 'linear-gradient(62deg, #fbab7e 10%, #F7CE68 100%)';
@@ -319,9 +450,15 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                     if (group == undefined)
                         continue;
 
-                    if (group.length == 1){
+                    if (group.length == 1 && group[0].group == undefined){
                         const card:ICard = group[0];
-                        cards_to_render.push(<Card key={card.id} card={card}/>);
+                        // cards_to_render.push(<Card key={card.id} card={card}/>);
+
+                        cards_to_render.push(<>
+                            <div className={this._canEdit ? 'card-remove' : ''} onClick={(e) => this.removeCard(e, i)}>
+                                <Card key={card.id} card={card}/>
+                            </div>
+                        </>);
                         AddSpacebtwCard(i, cards_groups_length, cards_to_render);
                         continue;
                     }
@@ -332,10 +469,22 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                         const card:ICard = group[x];
 
                         AddSpacebtwCard(x, group.length, cards_to_render_in_group);
-                        cards_to_render_in_group.push(<Card key={card.id} card={card}/>);
+                        cards_to_render_in_group.push(<>
+                            <div className={this._canEdit ? 'card-remove' : ''} onClick={(e) => this.removeCard(e, x)}>
+                                <div style={{display: 'flex', flexDirection: 'row'}}>
+                                    <p style={{ margin:'20px', color: 'white'}} >{card.group ?? 'notfound'}</p>
+                                    {this._canEdit && 
+                                    <button className='social-card-empty' style={{marginBottom: '40px', alignSelf: 'end'}} onClick={() => this.setState({addCardsModalOpen: true})}>
+                                        <div style={{fontFamily:'Timeburner', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                                            <b>+ card</b>
+                                        </div>
+                                    </button>}
+                                </div>
+                                { card.group == undefined ? <Card key={card.id} card={card}/> : <></> }
+                            </div>
+                        </>);
                     }
 
-                    
                     cards_to_render.push(
                         <div className='card-group'> 
                             { cards_to_render_in_group.map(card => card) } 
@@ -347,7 +496,9 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 this._social = this.state.userInfo.cards.filter(card => card.group == 'social').sort((a, b) => a.index - b.index);
 
                 return <>
-                    { this.state.addSocialCardsModalOpen && this.ShowSocialCardModal() }
+                    { this.state.addSocialCardsModalOpen && this.showSocialCardModal() }
+                    { this.state.addGroupCardsModalOpen && this.showGroupCardModal() }
+                    { this.state.addCardsModalOpen && this.showCardModal() }
                     <div className='user-container'>
                         <div className='user'>
                             <div className='profile'>
@@ -357,14 +508,31 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                                     <h1>{this.state.userInfo.name} {this.state.userInfo.lastName}</h1>
                                 </div>
 
-                                <div className='user-sumary'>{ this.state.userInfo.sumary ?? '' }</div>
-                                
+                                {this.sumary()}
+
                                 <div className='social'>
                                     { this.showSocialCard() }
                                 </div>
                             </div>
                             {
                                 cards_to_render.map(card => card)
+                            }
+                            <div className='user-line'></div>
+                            {
+                                <div style={{display:'flex', flexDirection: 'row'}}>
+                                    {this._canEdit && 
+                                    <button className='social-card-empty' style={{marginBottom: '40px'}} onClick={() => this.setState({addCardsModalOpen: true})}>
+                                        <div style={{fontFamily:'Timeburner', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                                            <b>+ card</b>
+                                        </div>
+                                    </button>}
+                                    {this._canEdit && 
+                                    <button className='social-card-empty' style={{marginBottom: '40px'}} onClick={() => this.setState({addGroupCardsModalOpen: true})}>
+                                        <div style={{fontFamily:'Timeburner', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                                            <b>+ group</b>
+                                        </div>
+                                    </button>}
+                                </div>
                             }
                         </div>
                     </div>

@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import IInfoUser from "../interfaces/user/info-user.type";
-import "./add-social-pop-up.css";
+import "./add-card-pop-up.css";
 
 type Props = {
-    addSocialCardsModalOpen: () => void;
+    addGroupCardsModalOpen: () => void;
     userInfo: IInfoUser | undefined;
-    addSocialCard: (e: React.FormEvent<HTMLFormElement>, userInfo: IInfoUser | undefined, addSocialCardsModalOpen: () => void) => void,
+    addGroupCard: (e: React.FormEvent<HTMLFormElement>, userInfo: IInfoUser | undefined, addGroupCardsModalOpen: () => void) => void,
     closePopup: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-export const Popup = (prop: Props) => {  
+export const GroupPopup = (prop: Props) => {  
     // const [description, setDescription] = useState('');
-    const [url, setUrl] = useState('');
-    const [cardPosition, setCardPosition] = useState(0);
-    // const [group, setGroup] = useState('');
-    // const [groupPosition, setGroupPosition] = useState(0);
+    // const [url, setUrl] = useState('');
+    // const [cardPosition, setCardPosition] = useState(0);
+    const [group, setGroup] = useState('');
+    const [groupPosition, setGroupPosition] = useState(0);
 
     return (    
     <div className="popup-container">     
@@ -23,7 +23,7 @@ export const Popup = (prop: Props) => {
                 <button onClick={prop.closePopup}>close</button>     
             </div>
             <div style={{ display: 'flex', justifyContent: 'center'}}>
-                <form onSubmit={(e) => prop.addSocialCard(e, prop.userInfo, prop.addSocialCardsModalOpen)}>
+                <form onSubmit={(e) => prop.addGroupCard(e, prop.userInfo, prop.addGroupCardsModalOpen)}>
                     {/* <div className='popup-field'>
                         <label className='popup-form-label'>
                             <b>Description: </b>
@@ -33,9 +33,10 @@ export const Popup = (prop: Props) => {
                             name='description'
                             type='text'
                             placeholder= ''
-                            value= ''/>
+                            value= { description }
+                            onChange= {(e) => {setDescription(e.target.value)} }/>
                     </div> */}
-                    <div className='popup-field'>
+                    {/* <div className='popup-field'>
                         <label className='popup-form-label'>
                             <b>URL: </b>
                         </label>
@@ -45,8 +46,8 @@ export const Popup = (prop: Props) => {
                             type='text'
                             placeholder= ''
                             value= { url }
-                            onChange={(e) => { setUrl(e.target.value)} } />
-                    </div>
+                            onChange={(e) => {setUrl(e.target.value)} } />
+                    </div> */}
                     {/* <div className='popup-field'>
                         <label className='popup-form-label'>
                             <b>Card position: </b>
@@ -57,9 +58,9 @@ export const Popup = (prop: Props) => {
                             type='text'
                             placeholder= ''
                             value= { cardPosition }
-                            onChange={(e) => { setCardPosition(parseInt(e.target.value))} } />
+                            onChange={(e) => {setCardPosition(parseInt(e.target.value))} } />
                     </div> */}
-                    {/* <div className='popup-field'>
+                    <div className='popup-field'>
                         <label className='popup-form-label'>
                             <b>Group: </b>
                         </label>
@@ -69,9 +70,9 @@ export const Popup = (prop: Props) => {
                             type='text'
                             placeholder= ''
                             value= { group }
-                            onChange={(e) => { setGroup(e.target.value)}} />
-                    </div> */}
-                    {/* <div className='popup-field'>
+                            onChange={(e) => {setGroup(e.target.value)}} />
+                    </div>
+                    <div className='popup-field'>
                         <label className='popup-form-label'>
                             <b>Group Position: </b>
                         </label>
@@ -81,8 +82,8 @@ export const Popup = (prop: Props) => {
                             type='text'
                             placeholder= ''
                             value= { groupPosition }
-                            onChange={(e) => { setGroupPosition(Number.parseInt(e.target.value))}} />
-                    </div> */}
+                            onChange={(e) => {setGroupPosition(Number.parseInt(e.target.value))}} />
+                    </div>
                     <button type='submit'>Add Card</button>
                 </form>
             </div>  

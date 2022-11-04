@@ -4,8 +4,6 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    
-    /* margin-top: 50px; */
 }
 
 .user {
@@ -17,6 +15,7 @@
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 50px;
+    width: 800px;
 }
 
 .logo {
@@ -57,14 +56,13 @@
 .social-card-to-remove { 
     height: 50px;
     width: 50px;
-    /* margin: 10px; */
     border-radius: 100%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
 }
 
 .social-card-empty { 
     height: 50px;
-    width: 50px;
+    width: 55px;
     margin: 10px;
     border-radius: 100%;
     background-color: white;
@@ -76,27 +74,39 @@
     border: none;
 }
 
+.social-card-empty:hover{
+    transition: 0.3s;
+    box-shadow: 0 4px 5px 0 rgba(0,0,0,0.2);
+}
+
+.card-remove {
+    width: 100%;
+    border:none;
+    /* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5); */
+    /* box-shadow: 0 1px 4px 0 rgba(0,0,0,0.5); */
+}
+
+.card-remove:hover {
+    transition: 0.3s;
+    box-shadow: 0 4px 5px 0 rgba(0,0,0,0.2);
+    /* border: 2px solid rgb(255, 136, 136); */
+}
+
 .social-card-remove {
     height: 50px;
     width: 50px;
     margin: 10px;
     border-radius: 100%;
-    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.5);
+    border: 1px solid transparent;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
 }
 
 .social-card-remove:hover {
     transition: 0.3s;
     border-radius: 30px;
-    border: none;
     border: 1px solid rgb(255, 136, 136);
     box-shadow: 0px 0px 4px 2px rgb(255, 136, 136);
 }
-
-/* .social-card-empty:hover {
-    transition: 0.3s;
-    border: 1px solid rgb(132, 132, 255);
-    box-shadow: 0px 0px 2px 1px rgb(132, 132, 255);
-} */
 
 .user-name-container {
     font-weight: bold;
@@ -106,12 +116,41 @@
     width: max-content;
 }
 
+.user-sumary-input {
+    padding-left: 5px;
+    display: block;
+    color: white;
+    font-family: 'Timeburner';
+    font-size: 1.1em;
+    line-height: 25px;
+    width: max-content;
+    resize: none;
+    width: 100%;
+    background-color: transparent;
+    border: transparent;
+    outline: 1px solid rgba(255, 255, 255, 0.387);
+}
+
 .user-sumary {
+    padding-left: 5px;
     display: inline;
     color: white;
     font-size: 1.1em;
     line-height: 25px;
-    width: max-content;
+    width: 100%;
+}
+
+.user-sumary-edit:hover {
+    outline: 1px solid rgba(255, 255, 255, 0.387);
+}
+
+.user-sumary-edit {
+    padding-left: 5px;
+    display: inline;
+    color: white;
+    font-size: 1.1em;
+    line-height: 25px;
+    width: 100%;
 }
 
 .card-group {
@@ -119,13 +158,24 @@
     flex-direction: column;
     width: 100%;
     font-weight: 400;
-    padding: 20px 20px 20px 20px;
     background-color: #0465b2;
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.5);
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+
+.user-line {
+    left: 0%;
+    display: flex;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 0;
+    border: 1px solid  rgba(255, 255, 255, 0.387);
+    display: inline-block;
+}
+
 .space-btw-card {
     margin-bottom: 20px;
 }
