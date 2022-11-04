@@ -7,7 +7,7 @@ export default interface IInfoUser extends RequestError {
     lastName: string;
     sumary: string;
     email: string;
-    backgroundColor: string,
-    backgroundImage: string,
+    backgroundColor: string | undefined,
+    backgroundImage: string | undefined,
     cards: Array<ICard>;
 }

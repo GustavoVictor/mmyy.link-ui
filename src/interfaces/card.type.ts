@@ -1,7 +1,8 @@
-import IGroup from "./group.type";
-import IItem from "./item.type";
-
-export default interface ICard extends IItem, IGroup {
+export default interface ICard {
     id?: string | null,
-    index: number
+    index: number,
+    URL: string | undefined,
+    description: string,
+    is_a_group: boolean,
+    in_group: string | undefined
 }

@@ -23,6 +23,7 @@ type State = {
     addSocialCardsModalOpen: boolean;
     addGroupCardsModalOpen: boolean;
     addCardsModalOpen: boolean;
+    groupToAdd: string | undefined;
     userInfo: IInfoUser | undefined;
     redirectUser: boolean;
     showSumaryInput: boolean;
@@ -36,6 +37,7 @@ class UserPageWithHookResult extends React.Component<Props, State>{
             addSocialCardsModalOpen: false,
             addGroupCardsModalOpen: false,
             addCardsModalOpen: false,
+            groupToAdd: '',
             redirectUser: false,
             userInfo: undefined,
             showSumaryInput: false
@@ -177,9 +179,9 @@ class UserPageWithHookResult extends React.Component<Props, State>{
             }]
         }
 
-        this.setState((state) => ({
-            userInfo: userInfo
-        }));
+        // this.setState((state) => ({
+        //     userInfo: userInfo
+        // }));
     }
 
     showSocialCard(): ReactNode {
@@ -211,10 +213,34 @@ class UserPageWithHookResult extends React.Component<Props, State>{
         if (userInfo != null 
             || userInfo != undefined)
         {
-            userInfo.cards = userInfo.cards.filter(card => card.group == 'social' && card.index != key).sort((a, b) => a.index - b.index);
+            userInfo.cards = userInfo.cards.filter(card => card.in_group == 'social' && card.index != key).sort((a, b) => a.index - b.index);
 
             for (let i = Number(key) - 1; i <= userInfo.cards.length - 1; i++){
                 let card = userInfo.cards[i];
+
+                card.index -= 1;
+
+                userInfo.cards[i] = card;
+            }
+        }
+
+        this.setState({
+            userInfo: userInfo
+        })
+    }
+
+    removeGroupCard(e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: Key){
+        e.preventDefault();
+
+        let userInfo = this.state.userInfo;
+
+        if (userInfo != null 
+            || userInfo != undefined)
+        {
+            userInfo.cards = userInfo.cards.filter(card => card.index != key).sort((a, b) => a.index - b.index);
+
+            for (let i = Number(key) - 1; i <= userInfo.cards.length - 1; i++){
+                let card = userInfo.cards.filter(card => card.in_group != 'social')[i];
 
                 card.index -= 1;
 
@@ -238,7 +264,7 @@ class UserPageWithHookResult extends React.Component<Props, State>{
             userInfo.cards = userInfo.cards.filter(card => card.index != key).sort((a, b) => a.index - b.index);
 
             for (let i = Number(key) - 1; i <= userInfo.cards.length - 1; i++){
-                let card = userInfo.cards.filter(card => card.group != 'social')[i];
+                let card = userInfo.cards.filter(card => card.in_group != 'social')[i];
 
                 card.index -= 1;
 
@@ -256,28 +282,26 @@ class UserPageWithHookResult extends React.Component<Props, State>{
         const target = e.target as typeof e.target & {
             description: { value: string | undefined },
             url: { value: string | undefined },
-            cardPosition: { value: number | undefined },
             group: { value: string | undefined },
             groupPosition: { value: number | undefined }
         };
 
-        const url = target.url.value ?? '';
-        let cardPosition = target.cardPosition?.value;
-
         if (userInfo == null || userInfo == undefined)
             return;
-
-        if (cardPosition == undefined 
-            || cardPosition == 0)
-            cardPosition = userInfo.cards.length + 1; 
-
-        userInfo.cards.push({
-            index: cardPosition,
-            group: 'social',
-            index_group: 0,
-            description: '',
+        
+        const url = target.url.value ?? '';
+        
+        const card = {
+            index:  userInfo.cards.length + 1,
             URL: url,
-        })
+            description: url,
+            is_a_group: false,
+            in_group: 'social'
+        };
+
+        userInfo.cards.push(card);
+
+        console.log(card);
 
         addSocialCardsModalOpen();
     }
@@ -285,80 +309,51 @@ class UserPageWithHookResult extends React.Component<Props, State>{
     addGroupCard(e: React.SyntheticEvent, userInfo: IInfoUser | undefined, addGroupCardsModalOpen: () => void){
         e.preventDefault();
         const target = e.target as typeof e.target & {
-            // description: { value: string | undefined },
-            // url: { value: string | undefined },
-            // cardPosition: { value: number | undefined },
             group: { value: string | undefined },
-            groupPosition: { value: number | undefined }
         };
-
-        // const description = target.description.value ?? '';
-        // const url = target.url?.value ?? '';
-        // let cardPosition = target.cardPosition?.value ?? 0;
-        const group = target.group?.value ?? '';
-        let groupPosition = target.groupPosition?.value;
 
         if (userInfo == null || userInfo == undefined)
             return;
 
-        if (groupPosition == undefined 
-            || groupPosition == 0)
-            groupPosition = userInfo.cards.length + 1; 
+        const index = userInfo.cards.length + 1;
+        const card = {
+            index: index,
+            URL: undefined,
+            description: target.group?.value ?? 'default label ' + index,
+            is_a_group: true,
+            in_group: undefined
+        }; 
 
-        userInfo.cards.push({
-            index: 0,
-            group: group,
-            index_group: userInfo.cards.length + 1,
-            description: '',
-            URL: '',
-        })
+        userInfo.cards.push(card);
 
-        console.log({
-            index: 0,
-            group: group,
-            index_group: groupPosition,
-            description: '',
-            URL: '',
-        })
+        console.log(card);
 
         addGroupCardsModalOpen();
     }
 
-    addCard(e: React.SyntheticEvent, userInfo: IInfoUser | undefined, addCardsModalOpen: () => void){
+    addCard(e: React.SyntheticEvent, userInfo: IInfoUser | undefined, addCardsModalOpen: () => void, group: string | undefined = undefined){
         e.preventDefault();
         const target = e.target as typeof e.target & {
             description: { value: string | undefined },
             url: { value: string | undefined }
         };
 
-        const description = target.description.value ?? '';
-        const url = target.url?.value ?? '';
-        let cardPosition = 0;
-
         if (userInfo == null || userInfo == undefined)
             return;
 
-        if (cardPosition == undefined 
-            || cardPosition == 0)
-            cardPosition = userInfo.cards.length + 1; 
+        const index = userInfo.cards.length + 1;
 
-        userInfo.cards.push({
-            index: cardPosition,
-            group: undefined,
-            index_group: undefined,
-            description: description,
-            URL: url,
-        })
+        const card = {
+            index: index,
+            URL: target.url?.value ?? '',
+            description: target.description.value ?? 'default label ' + index,
+            is_a_group: false,
+            in_group: group
+        }; 
 
-        console.log({
-            index: cardPosition,
-            group: undefined,
-            index_group: undefined,
-            description: description,
-            URL: url,
-        });
+        userInfo.cards.push(card);
 
-        console.log(userInfo.cards);
+        console.log(card);
 
         addCardsModalOpen();
     }
@@ -372,39 +367,33 @@ class UserPageWithHookResult extends React.Component<Props, State>{
     }
 
     showCardModal() : ReactNode {
-        return this.state.addCardsModalOpen ? <Popup addCardsModalOpen={() => this.setState({addCardsModalOpen: false})} userInfo={this.state.userInfo} addCard={this.addCard} closePopup={() => this.setState({addCardsModalOpen: false})} /> : null;
+        return this.state.addCardsModalOpen ? <Popup addCardsModalOpen={() => this.setState({addCardsModalOpen: false})} userInfo={this.state.userInfo} addCard={this.addCard} closePopup={() => this.setState({addCardsModalOpen: false})} groupToAdd={this.state.groupToAdd} /> : null;
     }
 
     sumary(): ReactNode {
-        if (this._canEdit)
-        {
-            if (this.state.showSumaryInput){
-                return (
-                    <>
-                        <textarea
-                            className= 'user-sumary-input' 
-                            value={ this.state.userInfo?.sumary }
-                            onChange={(e) => { 
-                                const value = e.currentTarget.value;
-                                let user = this.state.userInfo;
-                                if (user != null){
-                                    user.sumary = value;
-                                    this.setState({userInfo: user}); 
-                                }
-                            } } >
-                        </textarea>
-                        <button onClick={() => {this.setState({showSumaryInput: false})}} style={{marginTop:'10px', alignSelf: 'end'}}>Ok</button>
-                    </>
-                )
-            }
-            else
-                return <div onClick={() => {this.setState({showSumaryInput: true})}} className='user-sumary-edit'>{ this.state.userInfo?.sumary ?? ''}</div>
-            
+        if (this._canEdit && this.state.showSumaryInput) {
+            return (
+                <>
+                    <textarea
+                        className= 'user-sumary-input' 
+                        value={ this.state.userInfo?.sumary }
+                        onChange={(e) => { 
+                            const value = e.currentTarget.value;
+                            let user = this.state.userInfo;
+                            if (user != null){
+                                user.sumary = value;
+                                this.setState({userInfo: user}); 
+                            }
+                        } } >
+                    </textarea>
+                    <button onClick={() => {this.setState({showSumaryInput: false})}} style={{marginTop:'10px', alignSelf: 'end'}}>Ok</button>
+                </>
+            )
         }
-        else
-        {
+        else if (this._canEdit) 
+            return <div onClick={() => {this.setState({showSumaryInput: true})}} className='user-sumary-edit'>{ this.state.userInfo?.sumary ?? ''}</div>
+        else 
             return <div className='user-sumary'>{ this.state.userInfo?.sumary ?? ''}</div>
-        }
     }
 
     render(){
@@ -418,23 +407,46 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 document.body.style.backgroundColor = this.state.userInfo.backgroundColor ?? '#fbab7e';
                 document.body.style.backgroundImage = this.state.userInfo.backgroundImage ?? 'linear-gradient(62deg, #fbab7e 10%, #F7CE68 100%)';
                 
-                let _cards = this.state.userInfo.cards.filter(card => card.group != 'social').sort((a, b) => a.index - b.index);
+                let _cards = this.state.userInfo.cards.filter(card => card.in_group != 'social').sort((a, b) => a.index - b.index);
                 
-                let card_groups = _cards.reduce(function (r, a) {
-                    const group = a.index_group ?? a.index;
+                for (let x = 0; x < _cards.length; x ++){
+                    let card = _cards
+                }
 
-                    if (a.index_group != null)
-                    {
-                        r[group] = r[group] || [];
-                        r[group].push(a);
+                let card_groups = _cards.reduce(function (groups, card) {
+                    // if (groups.length == 0)
+                    //     groups = []; 
+
+                    if (card.is_a_group) {
+                        let group = groups.find((group) => group.description == card.description);
+
+                        if (group == undefined)
+                            groups[card.index] = { index: card.index, description: card.description, cards: [], is_a_group: true };
+                    }
+                    else if (card.in_group != undefined) { 
+                        let group = groups.find((group) => group.description == card.in_group);
+
+                        if (group == undefined)
+                        {
+                            const card_group = _cards.find((card_group) => card_group.description == card.in_group && card_group.is_a_group);
+
+                            if (card_group != undefined) {
+                                group = { index: card.index, description: card_group.description, cards: [ card ], is_a_group: true };
+                                groups[group.index] = group;
+                            }
+                        } else {
+                            group.cards.push(card);
+                            groups[group.index] = group;
+                        }
                     }
                     else {
-                        r[a.index] = [];
-                        r[group].push(a);
+                        groups[card.index] = { index: card.index, description: card.description, cards: [], card: card, is_a_group: false };
                     }
 
-                    return r;
-                }, new Array<ICard[]>());
+                    return groups;
+                }, new Array<{index:number, description:string, cards:ICard[], card?: ICard, is_a_group: boolean}>());
+
+                card_groups = card_groups.sort((a, b) => a.index - b.index);
 
                 const cards_groups_length = card_groups.length;
                 let cards_to_render = new Array<ReactNode>();
@@ -445,52 +457,61 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 }
 
                 for (let i = 0; i < cards_groups_length; i++){
-                    const group:ICard[] = card_groups[i];
+                    const group = card_groups[i];
 
-                    if (group == undefined)
-                        continue;
-
-                    if (group.length == 1 && group[0].group == undefined){
-                        const card:ICard = group[0];
-                        // cards_to_render.push(<Card key={card.id} card={card}/>);
-
-                        cards_to_render.push(<>
-                            <div className={this._canEdit ? 'card-remove' : ''} onClick={(e) => this.removeCard(e, i)}>
-                                <Card key={card.id} card={card}/>
-                            </div>
-                        </>);
-                        AddSpacebtwCard(i, cards_groups_length, cards_to_render);
-                        continue;
+                    if (group.is_a_group) {
+                        //renderizar o grupo.
+                        //renderizar pra cada item dentro do grupo.
                     }
-
-                    let cards_to_render_in_group = new Array<ReactNode>();
-
-                    for(let x = 0; x < group.length; x++){
-                        const card:ICard = group[x];
-
-                        AddSpacebtwCard(x, group.length, cards_to_render_in_group);
-                        cards_to_render_in_group.push(<>
-                            <div className={this._canEdit ? 'card-remove' : ''} onClick={(e) => this.removeCard(e, x)}>
-                                <div style={{display: 'flex', flexDirection: 'row'}}>
-                                    <p style={{ margin:'20px', color: 'white'}} >{card.group ?? 'notfound'}</p>
-                                    {this._canEdit && 
-                                    <button className='social-card-empty' style={{marginBottom: '40px', alignSelf: 'end'}} onClick={() => this.setState({addCardsModalOpen: true})}>
-                                        <div style={{fontFamily:'Timeburner', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                                            <b>+ card</b>
-                                        </div>
-                                    </button>}
-                                </div>
-                                { card.group == undefined ? <Card key={card.id} card={card}/> : <></> }
-                            </div>
-                        </>);
+                    else {
+                        //renderizar um item
                     }
+                    // if (group == undefined)
+                    //     continue;
 
-                    cards_to_render.push(
-                        <div className='card-group'> 
-                            { cards_to_render_in_group.map(card => card) } 
-                        </div>)
+                    // if (group.length == 1 && group[0].group == undefined){
+                    //     const card:ICard = group[0];
+                    //     // cards_to_render.push(<Card key={card.id} card={card}/>);
+
+                    //     cards_to_render.push(<>
+                    //         <div className={this._canEdit ? 'card-remove' : ''} onClick={(e) => this.removeCard(e, i)}>
+                    //             <Card key={card.id} card={card}/>
+                    //         </div>
+                    //     </>);
+                    //     AddSpacebtwCard(i, cards_groups_length, cards_to_render);
+                    //     continue;
+                    // }
+
+                    // let cards_to_render_in_group = new Array<ReactNode>();
+
+                    // for(let x = 0; x < group.length; x++){
+                    //     const card:ICard = group[x];
+
+                    //     AddSpacebtwCard(x, group.length, cards_to_render_in_group);
+                    //     cards_to_render_in_group.push(<>
+                    //         <div className={this._canEdit ? 'card-remove' : ''} onClick={(e) => this.removeGroupCard(e, x + 1)}>
+                    //             <div style={{display: 'flex', flexDirection: 'row'}}>
+                    //                 <p style={{ margin:'20px', color: 'white', width: '100%'}} >{card.group ?? 'notfound'}</p>
+                    //                 <div>
+                    //                     {this._canEdit && 
+                    //                     <button className='social-card-empty' style={{marginBottom: '40px'}} onClick={() => this.setState({addCardsModalOpen: true, groupToAdd: card.group})}>
+                    //                         <div style={{fontFamily:'Timeburner', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                    //                             <b>+ card</b>
+                    //                         </div>
+                    //                     </button>}
+                    //                 </div> 
+                    //             </div>
+                    //             { card.group == undefined ? <Card key={card.id} card={card}/> : <></> }
+                    //         </div>
+                    //     </>);
+                    // }
+
+                    // cards_to_render.push(
+                    //     <div className='card-group'> 
+                    //         { cards_to_render_in_group.map(card => card) } 
+                    //     </div>)
                     
-                    AddSpacebtwCard(i, cards_groups_length, cards_to_render);
+                    // AddSpacebtwCard(i, cards_groups_length, cards_to_render);
                 }
                 
                 this._social = this.state.userInfo.cards.filter(card => card.group == 'social').sort((a, b) => a.index - b.index);

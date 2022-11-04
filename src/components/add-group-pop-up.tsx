@@ -72,7 +72,7 @@ export const GroupPopup = (prop: Props) => {
                             value= { group }
                             onChange={(e) => {setGroup(e.target.value)}} />
                     </div>
-                    <div className='popup-field'>
+                    {/* <div className='popup-field'>
                         <label className='popup-form-label'>
                             <b>Group Position: </b>
                         </label>
@@ -83,7 +83,7 @@ export const GroupPopup = (prop: Props) => {
                             placeholder= ''
                             value= { groupPosition }
                             onChange={(e) => {setGroupPosition(Number.parseInt(e.target.value))}} />
-                    </div>
+                    </div> */}
                     <button type='submit'>Add Card</button>
                 </form>
             </div>  

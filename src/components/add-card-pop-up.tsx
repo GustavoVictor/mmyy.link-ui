@@ -5,7 +5,8 @@ import "./add-card-pop-up.css";
 type Props = {
     addCardsModalOpen: () => void;
     userInfo: IInfoUser | undefined;
-    addCard: (e: React.FormEvent<HTMLFormElement>, userInfo: IInfoUser | undefined, addCardsModalOpen: () => void) => void,
+    groupToAdd: string | undefined;
+    addCard: (e: React.FormEvent<HTMLFormElement>, userInfo: IInfoUser | undefined, addCardsModalOpen: () => void, group: string | undefined) => void,
     closePopup: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
@@ -23,7 +24,7 @@ export const Popup = (prop: Props) => {
                 <button onClick={prop.closePopup}>close</button>     
             </div>
             <div style={{ display: 'flex', justifyContent: 'center'}}>
-                <form onSubmit={(e) => prop.addCard(e, prop.userInfo, prop.addCardsModalOpen)}>
+                <form onSubmit={(e) => prop.addCard(e, prop.userInfo, prop.addCardsModalOpen, prop.groupToAdd)}>
                     <div className='popup-field'>
                         <label className='popup-form-label'>
                             <b>Description: </b>
