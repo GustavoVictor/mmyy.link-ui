@@ -12,6 +12,7 @@ import ILoggedUser from '../interfaces/user/logged-user.type';
 import { SocialPopup } from '../components/add-social-card-pop-up';
 import { Popup } from '../components/add-card-pop-up';
 import { GroupPopup } from '../components/add-group-pop-up';
+import { Group } from '../components/group';
 
 //Types
 type Props = {
@@ -353,8 +354,6 @@ class UserPageWithHookResult extends React.Component<Props, State>{
 
         userInfo.cards.push(card);
 
-        console.log(card);
-
         addCardsModalOpen();
     }
 
@@ -409,26 +408,23 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                 
                 let _cards = this.state.userInfo.cards.filter(card => card.in_group != 'social').sort((a, b) => a.index - b.index);
                 
-                for (let x = 0; x < _cards.length; x ++){
-                    let card = _cards
-                }
-
+                // incomplete implementation for groups
                 let card_groups = _cards.reduce(function (groups, card) {
                     // if (groups.length == 0)
                     //     groups = []; 
 
                     if (card.is_a_group) {
-                        let group = groups.find((group) => group.description == card.description);
+                        let group: any | undefined = groups.find(function(group) { return (group?.description ?? '') == card.description });
 
                         if (group == undefined)
                             groups[card.index] = { index: card.index, description: card.description, cards: [], is_a_group: true };
                     }
                     else if (card.in_group != undefined) { 
-                        let group = groups.find((group) => group.description == card.in_group);
+                        let group = groups.find((group) => (group?.description ?? '') == card.in_group);
 
                         if (group == undefined)
                         {
-                            const card_group = _cards.find((card_group) => card_group.description == card.in_group && card_group.is_a_group);
+                            const card_group = _cards.find((card_group) => (card_group?.description ?? '') == card.in_group && card_group.is_a_group);
 
                             if (card_group != undefined) {
                                 group = { index: card.index, description: card_group.description, cards: [ card ], is_a_group: true };
@@ -448,6 +444,8 @@ class UserPageWithHookResult extends React.Component<Props, State>{
 
                 card_groups = card_groups.sort((a, b) => a.index - b.index);
 
+                console.log(card_groups);
+
                 const cards_groups_length = card_groups.length;
                 let cards_to_render = new Array<ReactNode>();
 
@@ -455,17 +453,68 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                     if (i > 0 && i < lenght)
                         list.push(<div className='space-btw-card'></div>)
                 }
-
+                
                 for (let i = 0; i < cards_groups_length; i++){
                     const group = card_groups[i];
+
+                    if (group == undefined)
+                        continue;
 
                     if (group.is_a_group) {
                         //renderizar o grupo.
                         //renderizar pra cada item dentro do grupo.
+                        let cards_to_render_in_group = new Array<ReactNode>();
+
+                        for (let i = 0; i < group.cards.length; i++){
+                            const card:ICard = group.cards[i];
+
+                            cards_to_render_in_group.push(<>
+                                <div className={this._canEdit ? 'card-remove' : ''} onClick={(e) => this.removeGroupCard(e, i + 1)}>
+                                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                                        <p style={{ margin:'20px', color: 'white', width: '100%'}} >{group.description ?? 'notfound'}</p>
+                                        <div>
+                                            {this._canEdit && 
+                                            <button className='social-card-empty' style={{marginBottom: '40px'}} onClick={() => this.setState({addCardsModalOpen: true, groupToAdd: group.description})}>
+                                                <div style={{fontFamily:'Timeburner', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                                                    <b>+ card</b>
+                                                </div>
+                                            </button>}
+                                        </div> 
+                                    </div>
+                                    { <Card key={card.id} card={card}/>}
+                                </div>
+                            </>);
+                            AddSpacebtwCard(i, group.cards.length, cards_to_render_in_group);
+                        }
+
+                        // cards_to_render.push(
+                        //     <div className='card-group'> 
+                        //         { cards_to_render_in_group.map(card => card) } 
+                        //     </div>)
+
+                        cards_to_render.push(<Group description={group.description} 
+                                                    editable={this._canEdit}
+                                                    addCard={() => this.setState({addCardsModalOpen: true, groupToAdd: group.description})}>
+                                            {
+                                                cards_to_render_in_group
+                                            }</Group>)
                     }
                     else {
                         //renderizar um item
+                        const card:ICard | undefined = group.card;
+
+                        if (card == undefined)
+                            continue;
+
+                        cards_to_render.push(<>
+                            <div className={this._canEdit ? 'card-remove' : ''} onClick={(e) => this.removeCard(e, i)}>
+                                <Card key={card.id} card={card}/>
+                            </div>
+                        </>);
+                        AddSpacebtwCard(i, cards_groups_length, cards_to_render);
                     }
+
+
                     // if (group == undefined)
                     //     continue;
 
@@ -514,7 +563,7 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                     // AddSpacebtwCard(i, cards_groups_length, cards_to_render);
                 }
                 
-                this._social = this.state.userInfo.cards.filter(card => card.group == 'social').sort((a, b) => a.index - b.index);
+                this._social = this.state.userInfo.cards.filter(card => card.description == 'social').sort((a, b) => a.index - b.index);
 
                 return <>
                     { this.state.addSocialCardsModalOpen && this.showSocialCardModal() }
