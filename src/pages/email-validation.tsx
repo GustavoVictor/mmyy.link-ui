@@ -27,7 +27,6 @@ export default class EmailValidation extends React.Component<Props, State> {
     }
 
     handleInput = (code: number) => {
-        console.log(code)
         const _code: string = code.toString();
 
         if (_code.length == 6)

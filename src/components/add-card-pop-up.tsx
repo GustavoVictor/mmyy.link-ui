@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import IInfoUser from "../interfaces/user/info-user.type";
+import UserService from "../services/user.service";
 import "./add-card-pop-up.css";
 
 type Props = {
     addCardsModalOpen: () => void;
     userInfo: IInfoUser | undefined;
     groupToAdd: string | undefined;
-    addCard: (e: React.FormEvent<HTMLFormElement>, userInfo: IInfoUser | undefined, addCardsModalOpen: () => void, group: string | undefined) => void,
+    userService: UserService;
+    addCard: (e: React.FormEvent<HTMLFormElement>, userInfo: IInfoUser | undefined, addCardsModalOpen: () => void, group: string | undefined, userService: UserService) => void,
     closePopup: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
@@ -24,7 +26,7 @@ export const Popup = (prop: Props) => {
                 <button onClick={prop.closePopup}>close</button>     
             </div>
             <div style={{ display: 'flex', justifyContent: 'center'}}>
-                <form onSubmit={(e) => prop.addCard(e, prop.userInfo, prop.addCardsModalOpen, prop.groupToAdd)}>
+                <form onSubmit={(e) => prop.addCard(e, prop.userInfo, prop.addCardsModalOpen, prop.groupToAdd, prop.userService)}>
                     <div className='popup-field'>
                         <label className='popup-form-label'>
                             <b>Description: </b>

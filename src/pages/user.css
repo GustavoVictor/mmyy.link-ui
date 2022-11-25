@@ -41,8 +41,8 @@
 
 .social-card:hover {
     transition: 0.2s;
-    border: 1px solid #ea9974;
-    box-shadow: 1px 1px 4px 0px #ea5f1e;
+    border: 1px solid transparent;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
 .social-card { 
@@ -50,6 +50,7 @@
     width: 50px;
     margin: 10px;
     border-radius: 100%;
+    border: 1px solid transparent;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
 }
 
@@ -77,6 +78,11 @@
 .social-card-empty:hover{
     transition: 0.3s;
     box-shadow: 0 4px 5px 0 rgba(0,0,0,0.2);
+}
+
+.card {
+    width: 100%;
+    border:none;
 }
 
 .card-remove {
@@ -116,7 +122,7 @@
     width: max-content;
 }
 
-.user-sumary-input {
+.user-summary-input {
     padding-left: 5px;
     display: block;
     color: white;
@@ -131,7 +137,7 @@
     outline: 1px solid rgba(255, 255, 255, 0.387);
 }
 
-.user-sumary {
+.user-summary {
     padding-left: 5px;
     display: inline;
     color: white;
@@ -140,11 +146,11 @@
     width: 100%;
 }
 
-.user-sumary-edit:hover {
+.user-summary-edit:hover {
     outline: 1px solid rgba(255, 255, 255, 0.387);
 }
 
-.user-sumary-edit {
+.user-summary-edit {
     padding-left: 5px;
     display: inline;
     color: white;

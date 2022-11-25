@@ -18,7 +18,7 @@ const errorHandler = (error: any) => {
 api.defaults.headers.common['Content-Type'] = 'application/json';
 // api.defaults.headers.common['Access-Control-Allow-Origin'] = 'https://localhost:7045';
 
-axios.interceptors.request.use(
+api.interceptors.request.use(
     async (config) => {
         let token = localStorage.getItem("token");
 

@@ -3,6 +3,8 @@ import ICreateUser from "../interfaces/user/create-user.type";
 import IInfoUser from "../interfaces/user/info-user.type";
 import jwt_decode from 'jwt-decode';
 import ILoggedUser from "../interfaces/user/logged-user.type";
+import RequestError from "../interfaces/user/request-error.type";
+import ICard from "../interfaces/card.type";
 
 export default class UserService {
     loggedUser(): ILoggedUser| undefined {
@@ -36,14 +38,22 @@ export default class UserService {
     }
 
     async login(email: string, password: string): Promise< ILoggedUser| undefined> {
-        let token:string | undefined = await UserAPI.login({email: email, password: password});
+        const ret = await UserAPI.login({email: email, password: password});
         
-        if (token == undefined && !token)
-            return undefined;
+        if(!(ret as RequestError).hasError)
+        {
+            let token:string | undefined = ret as string;
 
-        this.storeToken(token);
-        
-        return this.loggedUser();
+            if (token == undefined && !token)
+                return undefined;
+
+            this.storeToken(token);
+            
+            return this.loggedUser();
+        }
+        else {
+            console.log((ret as RequestError).message);
+        }
     }
 
     async create(user: ICreateUser): Promise<boolean> {
@@ -54,6 +64,28 @@ export default class UserService {
 
         this.storeToken(token);
         
+        return true;
+    }
+
+    async updateSummary(summary: string): Promise<boolean> {
+        const ret = await UserAPI.updateSummary(summary);
+
+        if (ret as RequestError){
+            console.log(ret)
+            return false;
+        }
+
+        return true;
+    }
+
+    async addCard(card: ICard): Promise<any | RequestError | undefined> {
+        const ret = await UserAPI.addCard(card);
+
+        if (ret as RequestError){
+            console.log(ret)
+            return false;
+        }
+
         return true;
     }
 

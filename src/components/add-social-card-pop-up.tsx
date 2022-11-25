@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import IInfoUser from "../interfaces/user/info-user.type";
+import UserService from "../services/user.service";
 import "./add-social-card-pop-up.css";
 
 type Props = {
     addSocialCardsModalOpen: () => void;
     userInfo: IInfoUser | undefined;
-    addSocialCard: (e: React.FormEvent<HTMLFormElement>, userInfo: IInfoUser | undefined, addSocialCardsModalOpen: () => void) => void,
+    userService: UserService;
+    addSocialCard: (e: React.FormEvent<HTMLFormElement>, userInfo: IInfoUser | undefined, addSocialCardsModalOpen: () => void, userService: UserService) => void,
     closePopup: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
@@ -23,7 +25,7 @@ export const SocialPopup = (prop: Props) => {
                 <button onClick={prop.closePopup}>close</button>     
             </div>
             <div style={{ display: 'flex', justifyContent: 'center'}}>
-                <form onSubmit={(e) => prop.addSocialCard(e, prop.userInfo, prop.addSocialCardsModalOpen)}>
+                <form onSubmit={(e) => prop.addSocialCard(e, prop.userInfo, prop.addSocialCardsModalOpen, prop.userService)}>
                     {/* <div className='popup-field'>
                         <label className='popup-form-label'>
                             <b>Description: </b>
