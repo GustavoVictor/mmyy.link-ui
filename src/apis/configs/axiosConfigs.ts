@@ -2,7 +2,7 @@ import axios from "axios"
 
 export const api = axios.create({
     withCredentials: false,
-    baseURL: "https://localhost:7045/api/v1"
+    baseURL: "http://localhost:5001/api/v1"
 })
 
 const errorHandler = (error: any) => {
@@ -16,14 +16,14 @@ const errorHandler = (error: any) => {
 }
 
 api.defaults.headers.common['Content-Type'] = 'application/json';
-// api.defaults.headers.common['Access-Control-Allow-Origin'] = 'https://localhost:7045';
+api.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:5001';
 
 api.interceptors.request.use(
     async (config) => {
         let token = localStorage.getItem("token");
 
         if (!token)
-            return;
+            return config;
 
         const parsedToken = JSON.parse(token);
     
