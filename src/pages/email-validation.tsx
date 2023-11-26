@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import '../pages/email-validation.css';
-import OTPInput, { ResendOTP } from 'otp-input-react';
+// import OTPInput, { ResendOTP } from 'otp-input-react';
+import OtpInput from 'react-otp-input';
 import { Navigate } from "react-router-dom";
 
 type Props = {
@@ -8,7 +9,7 @@ type Props = {
 }
 
 type State = {
-    code: number | undefined;
+    code: string;
     resendBtn: boolean;
 }
 
@@ -21,12 +22,12 @@ export default class EmailValidation extends React.Component<Props, State> {
             <Navigate to='/register' replace />
 
         this.state = {
-            code: undefined,
+            code: '000000',
             resendBtn: false
         }
     }
 
-    handleInput = (code: number) => {
+    handleInput = (code: string) => {
         const _code: string = code.toString();
 
         if (_code.length == 6)
@@ -53,10 +54,10 @@ export default class EmailValidation extends React.Component<Props, State> {
         return codeIsValid;
     }
 
-    showResendBtn() : ReactNode {
-        if (this.state.resendBtn)
-            return <ResendOTP onResendClick={this.handleResendBtn()} />
-    }
+    // showResendBtn() : ReactNode {
+    //     if (this.state.resendBtn)
+    //         return <ResendOTP onResendClick={this.handleResendBtn()} />
+    // }
 
     render() {
         return <div className="email-validation-container">
@@ -65,15 +66,13 @@ export default class EmailValidation extends React.Component<Props, State> {
                 <label>
                     <b>Enter the <u>code</u> we just sent to email <u>{this.props.email}</u></b>
                 </label>
-                <OTPInput 
-                    inputClassName='email-validation-inputs' 
+                <OtpInput 
+                    inputStyle='email-validation-inputs' 
                     value={this.state.code} 
                     onChange={this.handleInput} 
-                    autoFocus 
-                    OTPLength={6} 
-                    otpType="number" 
-                    disabled={false} /> 
-                {  this.showResendBtn()}
+                    numInputs={6}
+                    shouldAutoFocus={true}
+                    renderInput={(props) => <input {...props} />}/>
             </div>
     }
 }
