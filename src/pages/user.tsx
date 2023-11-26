@@ -1,6 +1,5 @@
 import React, { Key, ReactNode } from 'react';
 import  { useParams, useSearchParams }  from "react-router-dom";
-import { SocialIcon } from 'react-social-icons';
 import { Card } from '../components/card';
 import Gustavo from '../assets/gustavo.jpeg';
 import ICard from '../interfaces/card.type';
@@ -197,7 +196,6 @@ class UserPageWithHookResult extends React.Component<Props, State>{
                                     window.location.assign(social.url ?? 'https://awkwardfamilyphotos.com');
                                 }
                             }}>
-                            <SocialIcon  key={social.index} url={social.url} style={{margin: '0px', pointerEvents: 'none'}} className={this._canEdit ? 'social-card-to-remove' : 'social-card'} label={social.description} fgColor='#242424' bgColor='#fff'/>
                         </div>
                     })
                 }
@@ -309,7 +307,8 @@ class UserPageWithHookResult extends React.Component<Props, State>{
             description: url,
             is_a_group: false,
             social: true,
-            in_group: 'social'
+            in_group: 'social',
+            socialMedia: false
         };
 
         userInfo.cards.push(card);
@@ -331,11 +330,12 @@ class UserPageWithHookResult extends React.Component<Props, State>{
         const index = userInfo.cards.length + 1;
         const card = {
             index: index,
-            url: undefined,
+            url: '',
             description: target.group?.value ?? 'default label ' + index,
             is_a_group: true,
             social: false,
-            in_group: undefined
+            in_group: undefined,
+            socialMedia: false
         }; 
 
         userInfo.cards.push(card);
@@ -361,7 +361,8 @@ class UserPageWithHookResult extends React.Component<Props, State>{
             description: target.description.value ?? 'default label ' + index,
             is_a_group: false,
             social: false,
-            in_group: group
+            in_group: group,
+            socialMedia: false
         }; 
 
         userInfo.cards.push(card);
