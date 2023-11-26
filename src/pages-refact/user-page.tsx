@@ -34,16 +34,78 @@ const FetchUser = function() : IUserInfo {
             icon: 'https://cdn.simpleicons.org/github',
             description:'GitHub',
             url:'https://github.com/gustavovictor'
-        }
+        },{
+            id: '11',
+            index: 1,
+            icon: 'https://cdn.simpleicons.org/linkedin',
+            description: '💼 My LinkedIn Profile',
+            url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
+        },
     ]
     
     let cards: Array<ICardType> = [
         {
             id: '11',
             index: 1,
+            type: 'line',
+            description: 'Meus projetos com C#',
+            url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
+        },
+        {
+            id: '11',
+            index: 1,
             description: '💼 My LinkedIn Profile',
             url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
-        }
+        },
+        {
+            id: '11',
+            index: 1,
+            description: '💼 My LinkedIn Profile',
+            url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
+        },
+        {
+            id: '11',
+            index: 1,
+            type: 'line',
+            description: '[indicação] - Canais para aprender c#',
+            url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
+        },
+        {
+            id: '11',
+            index: 1,
+            description: '💼 My LinkedIn Profile',
+            url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
+        },
+        {
+            id: '11',
+            index: 1,
+            description: '💼 My LinkedIn Profile',
+            url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
+        },
+        {
+            id: '11',
+            index: 1,
+            description: '💼 My LinkedIn Profile',
+            url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
+        },
+        {
+            id: '11',
+            index: 1,
+            type: 'line',
+            description: 'Os meus interesses agora',
+            url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
+        },{
+            id: '11',
+            index: 1,
+            description: '💼 My LinkedIn Profile',
+            url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
+        },
+        {
+            id: '11',
+            index: 1,
+            description: '💼 My LinkedIn Profile',
+            url: 'www.linkedin.com/in/gustavo-victor-silva-assunção'
+        },
     ]
 
     return {
@@ -106,7 +168,7 @@ export const UserPage = () => {
                 </li>
                 {
                     user.cards.map((card: ICardType, index) => (
-                        <CardComponent key={index} id={card.id} index={card.index} url={card.url} description={card.description}/>
+                        <CardComponent key={index} id={card.id} index={card.index} type={card.type} url={card.url} description={card.description}/>
                     ))
                 }
             </ul>
