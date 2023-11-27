@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import ICardType from "../interfaces-refact/card-type";
+import { Link } from "react-router-dom";
 
 export const CardComponent: FC<ICardType> = ({ id, index, type, url, description }) => {
     const [hover, setHover] = useState(false);
@@ -7,14 +8,16 @@ export const CardComponent: FC<ICardType> = ({ id, index, type, url, description
     let li_tag_style: React.CSSProperties = {
         textAlign: 'center',
         textDecoration: 'none',
-        height: '40px',
-        marginBottom: '20px'
+        height: 'fit-content',
+        marginBottom: '20px',
+        minHeight: '40px'
     }
 
     let a_tag_style: React.CSSProperties = {
         height: 'auto',
         display: 'block',
         textAlign: 'center',
+        padding: '5px',
         textDecoration: 'none',
         color: 'black'
     }
@@ -23,6 +26,7 @@ export const CardComponent: FC<ICardType> = ({ id, index, type, url, description
         all: 'unset',
         width: '80%',
         height: '100%',
+        minHeight: '40px',
         boxShadow: hover ? '0 4px 5px 0 rgba(0,0,0,0.3)' : '0 8px 16px 0 rgba(0,0,0,0.2)',
         backgroundColor: 'white'
     }
@@ -46,10 +50,10 @@ export const CardComponent: FC<ICardType> = ({ id, index, type, url, description
     }
     
     return <>
-        <li key={id} style={li_tag_style} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave}>
+        <li key={id} style={li_tag_style}>
             {   
                 (type == 'normal' || type == undefined) &&  
-                <button style={button_tag_style}>
+                <button style={button_tag_style} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave}>
                     <a style={a_tag_style} key= {index} href={url} className="card" target="_blank" rel="noopener noreferrer">
                         <b>{description}</b>
                     </a>

@@ -121,7 +121,7 @@ const FetchUser = function() : IUserInfo {
     }
 }
 
-export const UserPage = () => {
+export const UserMaintenancePage = () => {
     const { nick } = useParams<string>();
     const [searchParams] = useSearchParams();
     const [user, setUser] = useState<IUserInfo>();
@@ -132,8 +132,7 @@ export const UserPage = () => {
     let ul_tag_style : React.CSSProperties = {
         textAlign: 'center', 
         padding: 30, 
-        marginTop: '15%',
-        margin: '15px',
+        marginTop: '10%'
     }
 
     useEffect(() => {
