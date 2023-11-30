@@ -60,52 +60,28 @@ const FetchUser = function() : IUserInfo {
         {
             id: '3',
             index: 3,
-            description: 'An simple API to help you with back-end development',
+            description: 'A simple API to help you with back-end development',
             url: 'https://github.com/GustavoVictor/simple-form'
         },
         {
             id: '4',
             index: 4,
             type: 'line',
-            description: '[indicação] - Canais para aprender c#',
+            description: 'This site is open source. \nIf you help me  you can win a summary page too  👨‍💻🤙🏼',
             url: 'https://www.linkedin.com/in/gustavo-victor-silva-assunção'
         },
         {
             id: '5',
             index: 5,
-            description: '💼 My LinkedIn Profile',
-            url: 'https://www.linkedin.com/in/gustavo-victor-silva-assunção'
+            description: 'mmyy.link - ui 📱',
+            url: 'https://github.com/GustavoVictor/mmyy.link-ui'
         },
         {
             id: '6',
             index: 6,
-            description: '💼 My LinkedIn Profile',
-            url: 'https://www.linkedin.com/in/gustavo-victor-silva-assunção'
-        },
-        {
-            id: '7',
-            index: 7,
-            description: '💼 My LinkedIn Profile',
-            url: 'https://www.linkedin.com/in/gustavo-victor-silva-assunção'
-        },
-        {
-            id: '8',
-            index: 8,
-            type: 'line',
-            description: 'Os meus interesses agora',
-            url: 'https://www.linkedin.com/in/gustavo-victor-silva-assunção'
-        },{
-            id: '9',
-            index: 9,
-            description: '💼 My LinkedIn Profile',
-            url: 'https://www.linkedin.com/in/gustavo-victor-silva-assunção'
-        },
-        {
-            id: '10',
-            index: 10,
-            description: '💼 My LinkedIn Profile',
-            url: 'https://www.linkedin.com/in/gustavo-victor-silva-assunção'
-        },
+            description: 'mmyy.link - api 🦾',
+            url: 'https://github.com/GustavoVictor/mmyy.link-api'
+        }
     ]
 
     return {

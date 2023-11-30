@@ -11,7 +11,7 @@ const div_container_tag_style: React.CSSProperties = {
     width: '100%', 
     height: '100%',
     display: 'flex',
-    position: 'absolute', 
+    // position: 'absolute', 
     alignItems: 'center',
     justifyContent: 'center', 
 }
