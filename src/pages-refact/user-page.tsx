@@ -48,20 +48,20 @@ const FetchUser = function() : IUserInfo {
             id: '11',
             index: 1,
             type: 'line',
-            description: 'Meus projetos com C#',
+            description: 'My projects',
             url: 'https://www.linkedin.com/in/gustavo-victor-silva-assunção'
         },
         {
             id: '22',
             index: 2,
-            description: '💼 My LinkedIn Profile',
-            url: 'https://www.linkedin.com/in/gustavo-victor-silva-assunção'
+            description: 'mmyy.link project is a profile page [status: building 🛠️]',
+            url: 'https://www.mmyy.link/index'
         },
         {
             id: '3',
             index: 3,
-            description: '💼 My LinkedIn Profile',
-            url: 'https://www.linkedin.com/in/gustavo-victor-silva-assunção'
+            description: 'An simple API to help you with back-end development',
+            url: 'https://github.com/GustavoVictor/simple-form'
         },
         {
             id: '4',
@@ -112,7 +112,7 @@ const FetchUser = function() : IUserInfo {
         name: 'Gustavo',
         nickName: 'v_guto',
         lastName: 'Assunção',
-        summary: `Back-end developer 💻 (C# 💜💜) | React enthusiast 😃 | and sometimes I'm a bartender 🍸🍹 and mechanic as a hobby 🔩🚗`,
+        summary: `Software developer 💻 (C# 💜💜) | React enthusiast 😃 | and sometimes I'm a bartender 🍸🍹 and mechanic as a hobby 🔩🚗`,
         email: 'gustavovictor94@gmail.com',
         backgroundColor:'#fbab7e',
         backgroundImage: 'linear-gradient(62deg, #fbab7e 10%, #F7CE68 100%)', 
@@ -159,7 +159,7 @@ export const UserPage = () => {
                     <b>{user.summary}</b>
                 </li>
                 <li style={{ marginBottom: '20px'}}>
-                    <ul style={{overflow: 'hidden', margin: 0, display:'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    <ul style={{ padding: '30px 0px 15px 0px', overflow: 'hidden', margin: 0, display:'flex', alignItems: 'center', justifyContent: 'center'}}>
                         {
                             user.cardsSocialMedia.map((card: ICardSocialMediaType, index) => (
                                 <CardSocialMediaComponent key={index} id={card.id} index={card.index} url={card.url} description={card.description} icon={card.icon}/>

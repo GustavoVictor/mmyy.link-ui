@@ -27,7 +27,8 @@ export const CardComponent: FC<ICardType> = ({ id, index, type, url, description
         width: '80%',
         height: '100%',
         minHeight: '40px',
-        boxShadow: hover ? '0 4px 5px 0 rgba(0,0,0,0.3)' : '0 8px 16px 0 rgba(0,0,0,0.2)',
+        transition: '0.1s',
+        boxShadow: hover ? '0 4px 5px 0 rgba(0,0,0,0.3)' : '0 8px 8px 0 rgba(0,0,0,0.2)',
         backgroundColor: 'white'
     }
 

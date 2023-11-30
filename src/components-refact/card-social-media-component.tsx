@@ -12,7 +12,7 @@ export const CardSocialMediaComponent: FC<ICardSocialMediaType> = ({ index, url,
         width:'100%',
         height:'100%',
         borderRadius: '100%',
-        boxShadow: hover ? '0 4px 4px 0 rgba(0,0,0,0.3)' : '0 8px 16px 0 rgba(0,0,0,0.2)',
+        boxShadow: hover ? '0 3px 4px 0 rgba(0,0,0,0.3)' : '0 5px 8px 0 rgba(0,0,0,0.2)',
         backgroundColor: 'white',
         textDecoration: 'none',
     }
